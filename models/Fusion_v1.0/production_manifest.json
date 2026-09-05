@@ -1,0 +1,14 @@
+{
+    "project": "RiskGuard-AI",
+    "version": "Fusion_v1.0",
+    "status": "FROZEN",
+    "model2_weight": 0.7,
+    "model3_weight": 0.3,
+    "production_threshold": 0.7,
+    "model2_features": 432,
+    "model3_features": 18,
+    "verified": true,
+    "verified_transaction_id": 2988000,
+    "verified_combined_risk": 0.4393677473068237,
+    "verified_decision": "LEGITIMATE / ALLOW"
+}

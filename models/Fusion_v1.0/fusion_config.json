@@ -1,0 +1,57 @@
+{
+    "project": "RiskGuard-AI",
+    "fusion_version": "latest",
+    "models": {
+        "model2": {
+            "name": "Model 2",
+            "artifact": "model2_xgb.pkl",
+            "features": "model2_features.pkl",
+            "categorical_columns": "model2_categorical_cols.pkl",
+            "weight": 0.7
+        },
+        "model3": {
+            "name": "Model 3 v2",
+            "artifact": "model3_v2.json",
+            "features": "model3_v2_features.pkl",
+            "weight": 0.3
+        }
+    },
+    "fusion": {
+        "method": "weighted_average",
+        "model2_weight": 0.7,
+        "model3_weight": 0.3
+    },
+    "production": {
+        "threshold": 0.7,
+        "risk_bands": {
+            "LOW": [
+                0.0,
+                0.3
+            ],
+            "MEDIUM": [
+                0.3,
+                0.5
+            ],
+            "HIGH": [
+                0.5,
+                0.7
+            ],
+            "CRITICAL": [
+                0.7,
+                1.0
+            ]
+        }
+    },
+    "validation_metrics": {
+        "roc_auc": 0.876098,
+        "pr_auc": 0.465263,
+        "precision": 0.615692,
+        "recall": 0.399611,
+        "f1": 0.484658,
+        "true_negative": 84729,
+        "false_positive": 769,
+        "false_negative": 1851,
+        "true_positive": 1232,
+        "validation_rows": 88581
+    }
+}

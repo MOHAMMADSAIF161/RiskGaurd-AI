@@ -1,0 +1,983 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Model Performance | RiskGuard AI</title>
+
+<style>
+:root{
+    --sage:#8B9A6E;
+    --sage-dark:#74845A;
+    --cream:#F7F2EB;
+    --beige:#EAE2D6;
+    --grey:#EEEEEE;
+    --text:#2F332B;
+    --muted:#6F736A;
+    --border:#E2DDD4;
+    --white:#FFFFFF;
+    --shadow:0 10px 28px rgba(47,51,43,.07);
+    --green:#587447;
+    --red:#9A4F45;
+    --amber:#9A713D;
+}
+*{box-sizing:border-box}
+html{font-size:15px;-webkit-text-size-adjust:100%}
+body{
+    margin:0;
+    background:var(--cream);
+    color:var(--text);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+.navbar{
+    width:100%;
+    min-height:76px;
+    background:rgba(255,255,255,.96);
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    z-index:1000;
+    backdrop-filter:blur(12px);
+}
+.navbar-inner{
+    width:min(1200px,92%);
+    min-height:76px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+}
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    flex-shrink:0;
+}
+.logo{
+    width:42px;height:42px;border-radius:12px;
+    background:var(--sage);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:800;
+}
+.brand-text{font-size:20px;font-weight:700;white-space:nowrap}
+.brand-text span{color:var(--sage-dark)}
+.nav-links{
+    display:flex;align-items:center;gap:24px;
+    overflow-x:auto;scrollbar-width:none;
+}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{
+    text-decoration:none;
+    color:var(--muted);
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+    padding:8px 0;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--sage-dark)}
+.nav-links a.active{font-weight:800}
+
+.container{
+    width:min(1200px,92%);
+    margin:auto;
+    padding:38px 0 70px;
+}
+.page-title{margin-bottom:24px}
+.eyebrow{
+    display:inline-flex;
+    align-items:center;
+    padding:6px 10px;
+    border-radius:999px;
+    background:#E7EDDE;
+    color:var(--sage-dark);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.04em;
+    margin-bottom:10px;
+}
+.page-title h1{margin:0 0 7px;font-size:32px;line-height:1.2}
+.page-title p{margin:0;color:var(--muted);font-size:15px;max-width:850px}
+.status{
+    display:inline-flex;align-items:center;gap:8px;
+    margin-top:14px;padding:7px 11px;
+    border-radius:999px;
+    background:#E7EDDE;color:var(--green);
+    font-size:12px;font-weight:800;
+}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--sage)}
+
+.section{margin-top:26px}
+.section-header{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    gap:16px;margin-bottom:14px;
+}
+.section-header h2{margin:0;font-size:21px;line-height:1.3}
+.section-header p,.section-header span{margin:3px 0 0;color:var(--muted);font-size:13px}
+
+.card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:22px;
+    box-shadow:var(--shadow);
+}
+
+.hero-grid{
+    display:grid;
+    grid-template-columns:1.35fr 1fr 1fr 1fr;
+    gap:16px;
+}
+.hero-card{
+    min-height:145px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+.hero-card.primary{
+    background:var(--sage);
+    border-color:var(--sage);
+    color:#fff;
+}
+.metric-label{
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+.primary .metric-label{color:rgba(255,255,255,.82)}
+.metric-value{
+    font-size:30px;
+    line-height:1.1;
+    font-weight:800;
+    margin-top:9px;
+}
+.metric-sub{font-size:12px;color:var(--muted);margin-top:8px}
+.primary .metric-sub{color:rgba(255,255,255,.85)}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-box{
+    background:var(--grey);
+    border:1px solid #E5E5E1;
+    border-radius:12px;
+    padding:14px;
+}
+.info-box .label{color:var(--muted);font-size:12px;font-weight:700;margin-bottom:4px}
+.info-box .value{font-size:16px;font-weight:800;overflow-wrap:anywhere}
+
+.business-card{
+    background:#F3EEE5;
+}
+.formula{
+    margin-top:16px;
+    display:grid;
+    grid-template-columns:1fr auto 1fr auto 1fr;
+    gap:10px;
+    align-items:center;
+}
+.formula-step{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:15px;
+    text-align:center;
+}
+.formula-step strong{display:block;font-size:15px}
+.formula-step span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.arrow{font-size:20px;color:var(--sage-dark);font-weight:800;text-align:center}
+
+.kpi-list{display:grid;gap:11px}
+.kpi-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 0;border-bottom:1px solid var(--border);
+}
+.kpi-row:last-child{border-bottom:0}
+.kpi-row span{color:var(--muted);font-size:13px}
+.kpi-row strong{font-size:15px}
+
+.metric-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+}
+.small-metric{
+    background:var(--grey);
+    border:1px solid #E5E5E1;
+    border-radius:13px;
+    padding:16px;
+}
+.small-metric .value{font-size:24px;font-weight:800;margin-top:6px}
+.small-metric .desc{color:var(--muted);font-size:12px;margin-top:4px}
+
+.comparison{
+    width:100%;
+    border-collapse:collapse;
+}
+.comparison th{
+    text-align:left;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+    padding:12px;
+    border-bottom:1px solid var(--border);
+}
+.comparison td{
+    padding:13px 12px;
+    font-size:14px;
+    border-bottom:1px solid #EEEAE3;
+}
+.comparison tr:last-child td{border-bottom:0}
+.highlight-row{background:#F3F6ED}
+.badge{
+    display:inline-flex;padding:5px 9px;border-radius:999px;
+    font-size:11px;font-weight:800;
+    background:#E7EDDE;color:var(--sage-dark);
+}
+.note{
+    margin-top:16px;
+    padding:15px 16px;
+    border-radius:12px;
+    background:#F3EEE5;
+    border:1px solid var(--border);
+    color:#555A50;
+    font-size:13px;
+    line-height:1.65;
+}
+.note strong{color:var(--text)}
+.warning{
+    background:#FBF4E7;
+    border-color:#EAD8B9;
+}
+.warning strong{color:#86602E}
+
+.flow{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+}
+.flow-step{
+    position:relative;
+    background:var(--grey);
+    border:1px solid #E5E5E1;
+    border-radius:13px;
+    padding:17px 13px;
+    text-align:center;
+}
+.flow-step .number{
+    width:28px;height:28px;border-radius:50%;
+    margin:0 auto 9px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--sage);color:#fff;font-size:12px;font-weight:800;
+}
+.flow-step strong{display:block;font-size:13px}
+.flow-step span{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+
+.secondary{
+    margin-top:34px;
+}
+.secondary-header{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:15px;margin-bottom:14px;
+}
+.secondary-header h2{margin:0;font-size:20px}
+.secondary-header p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.config-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.policy-message{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:13px;
+}
+.policy-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{
+    border:0;
+    border-radius:10px;
+    padding:10px 16px;
+    font:inherit;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+}
+.btn-primary{background:var(--sage);color:#fff}
+.btn-primary:hover{background:var(--sage-dark)}
+.btn-secondary{background:#fff;color:var(--text);border:1px solid var(--border)}
+button:disabled{opacity:.6;cursor:not-allowed}
+
+.footer{
+    margin-top:35px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+}
+
+#error{
+    display:none;
+    padding:15px;
+    margin-bottom:18px;
+    border-radius:12px;
+    background:#F9EDEA;
+    border:1px solid #E6C8C2;
+    color:var(--red);
+    font-size:13px;
+}
+
+@media(max-width:1050px){
+    .hero-grid{grid-template-columns:repeat(2,1fr)}
+    .metric-grid{grid-template-columns:repeat(3,1fr)}
+    .config-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:800px){
+    .navbar-inner{flex-wrap:wrap;padding:12px 0}
+    .navbar{height:auto}
+    .nav-links{width:100%;gap:18px}
+    .two-col,.three-col{grid-template-columns:1fr}
+    .formula{grid-template-columns:1fr}
+    .arrow{transform:rotate(90deg)}
+    .flow{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+    .container{width:calc(100% - 30px);padding-top:28px}
+    .hero-grid,.metric-grid,.config-grid,.info-grid{grid-template-columns:1fr}
+    .page-title h1{font-size:27px}
+    .card{padding:17px}
+    .flow{grid-template-columns:1fr}
+}
+</style>
+
+<style id="riskguard-index-matched-layout">
+/* =========================================================
+   RISKGUARD AI — MODEL PERFORMANCE
+   INDEX-MATCHED VISUAL LAYOUT
+   Visual/CSS/markup only. Application logic is untouched.
+   ========================================================= */
+
+/* Index palette */
+:root{
+    --sage:#8B9A6E;
+    --sage-dark:#68764F;
+    --sage-light:#EEF2E6;
+    --cream:#F7F2EB;
+    --beige:#EAE2D6;
+    --grey:#EEEEEE;
+    --text:#172033;
+    --muted:#596273;
+    --white:#FFFFFF;
+    --border:#DDD8CE;
+    --shadow:0 10px 28px rgba(47,51,43,.07);
+}
+
+/* Same page canvas as index */
+html, body{
+    width:100%;
+    min-width:0;
+    margin:0;
+    padding:0;
+}
+
+body{
+    background:#FCFBF8;
+    color:var(--text);
+}
+
+/* ---------------------------------------------------------
+   NAVBAR — same geometry/alignment as index
+   --------------------------------------------------------- */
+.navbar{
+    width:100% !important;
+    height:72px !important;
+    min-height:72px !important;
+    padding:0 5% !important;
+    margin:0 !important;
+    background:rgba(255,255,255,.94) !important;
+    border-bottom:1px solid #ECE9E2 !important;
+    display:flex !important;
+    align-items:center !important;
+    position:sticky !important;
+    top:0 !important;
+    z-index:1000 !important;
+    backdrop-filter:blur(12px) !important;
+}
+
+.navbar-inner{
+    width:100% !important;
+    max-width:none !important;
+    min-height:72px !important;
+    height:72px !important;
+    margin:0 !important;
+    padding:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:25px !important;
+}
+
+/* Make the existing logo visually match index's brand icon */
+.logo{
+    width:42px !important;
+    height:42px !important;
+    min-width:42px !important;
+    border-radius:12px !important;
+    background:var(--sage) !important;
+    color:#fff !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:22px !important;
+    font-weight:700 !important;
+    box-shadow:0 5px 14px rgba(139,154,110,.25) !important;
+}
+
+.brand{
+    display:flex !important;
+    align-items:center !important;
+    gap:12px !important;
+    text-decoration:none !important;
+    flex-shrink:0 !important;
+}
+
+.brand-text{
+    font-size:20px !important;
+    font-weight:700 !important;
+    white-space:normal !important;
+    line-height:1.1 !important;
+}
+
+.brand-text strong{
+    display:block !important;
+    font-size:20px !important;
+    line-height:1.1 !important;
+    letter-spacing:-.4px !important;
+}
+
+.brand-text span{
+    display:block !important;
+    color:#555 !important;
+    font-size:12px !important;
+    font-weight:400 !important;
+    margin-top:2px !important;
+    line-height:1.2 !important;
+}
+
+.nav-links{
+    display:flex !important;
+    align-items:center !important;
+    gap:28px !important;
+    overflow:visible !important;
+    scrollbar-width:none !important;
+}
+
+.nav-links a{
+    color:#343a40 !important;
+    font-size:14px !important;
+    font-weight:500 !important;
+    text-decoration:none !important;
+    white-space:nowrap !important;
+    padding:25px 0 !important;
+    border-bottom:2px solid transparent !important;
+    border-radius:0 !important;
+    transition:color .15s ease,border-color .15s ease !important;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    color:var(--sage-dark) !important;
+    border-bottom-color:var(--sage) !important;
+}
+
+.nav-links a.active{
+    font-weight:600 !important;
+}
+
+/* ---------------------------------------------------------
+   MAIN CONTENT — same centered width and left/right gutters
+   as index
+   --------------------------------------------------------- */
+main.container{
+    width:100% !important;
+    max-width:1200px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    padding:38px 28px 70px !important;
+    box-sizing:border-box !important;
+}
+
+/* Do not let cards/sections create a wider canvas */
+main.container > *,
+main.container section,
+main.container .card,
+main.container .hero-grid,
+main.container .two-col,
+main.container .three-col,
+main.container .metric-grid,
+main.container .flow{
+    max-width:100%;
+    box-sizing:border-box;
+}
+
+/* Index-like typography weight */
+.page-title h1,
+.section-header h2,
+.secondary-header h2{
+    color:var(--text);
+}
+
+.page-title p,
+.section-header span,
+.section-header p,
+.secondary-header p{
+    color:var(--muted);
+}
+
+/* Keep the Model Performance page content polished while preserving
+   its existing information architecture */
+.card{
+    border-color:var(--border) !important;
+    border-radius:16px !important;
+    box-shadow:0 8px 24px rgba(47,51,43,.06) !important;
+}
+
+.info-box,
+.small-metric,
+.flow-step{
+    background:var(--grey) !important;
+    border-color:#E5E5E1 !important;
+}
+
+.business-card,
+.note{
+    background:var(--beige) !important;
+    border-color:var(--border) !important;
+}
+
+.hero-card.primary,
+.flow-step .number,
+.btn-primary{
+    background:var(--sage) !important;
+}
+
+.btn-primary:hover{
+    background:var(--sage-dark) !important;
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE — follows index's desktop/tablet/mobile behavior
+   --------------------------------------------------------- */
+@media (max-width:1000px){
+    .navbar-inner{
+        gap:18px !important;
+    }
+
+    .nav-links{
+        gap:15px !important;
+    }
+}
+
+@media (max-width:700px){
+    .navbar{
+        height:auto !important;
+        min-height:70px !important;
+        padding:12px 20px !important;
+    }
+
+    .navbar-inner{
+        height:auto !important;
+        min-height:46px !important;
+    }
+
+    .nav-links{
+        display:none !important;
+    }
+
+    main.container{
+        width:100% !important;
+        max-width:none !important;
+        padding:28px 17px 55px !important;
+    }
+}
+
+@media (max-width:600px){
+    main.container{
+        padding-left:17px !important;
+        padding-right:17px !important;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="navbar-inner">
+        <a href="/" class="brand">
+            <div class="logo">🛡</div>
+            <div class="brand-text">
+                <strong>RiskGuard AI</strong>
+                <span>Protect Merchant Revenue</span>
+            </div>
+        </a>
+
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/create-order-page">Create Order</a>
+            <a href="/transactions">Order Queue</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/model-performance" class="active">Model Performance</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="page-title">
+        <div class="eyebrow">MERCHANT RETURN RISK</div>
+        <h1>Model Performance</h1>
+        <p>
+            Verified performance of the RiskGuard Return Risk Random Forest,
+            focused on identifying orders with the highest expected return loss
+            so merchant review capacity is used where it matters most.
+        </p>
+        <div class="status"><span class="dot"></span> Verified Return Risk evaluation</div>
+    </div>
+
+    <div id="error"></div>
+
+    <!-- PRIMARY BUSINESS KPIs -->
+    <section>
+        <div class="section-header">
+            <div>
+                <h2>Business Performance</h2>
+                <span>The primary evidence for the Return Risk workflow</span>
+            </div>
+        </div>
+
+        <div class="hero-grid">
+            <div class="card hero-card primary">
+                <div class="metric-label">Loss Capture Lift</div>
+                <div class="metric-value">4.24×</div>
+                <div class="metric-sub">vs random 10% selection</div>
+            </div>
+
+            <div class="card hero-card">
+                <div class="metric-label">Loss Capture Rate</div>
+                <div class="metric-value">42.48%</div>
+                <div class="metric-sub">Realized loss proxy captured</div>
+            </div>
+
+            <div class="card hero-card">
+                <div class="metric-label">Test Review Workload</div>
+                <div class="metric-value">10.14%</div>
+                <div class="metric-sub">Orders prioritized for review</div>
+            </div>
+
+            <div class="card hero-card">
+                <div class="metric-label">Expected-Loss Cutoff</div>
+                <div class="metric-value">₹42.82</div>
+                <div class="metric-sub">Exact cutoff: ₹42.824297</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODEL OVERVIEW -->
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2>Model Overview</h2>
+                <span>What the model is designed to do</span>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="label">Model</div>
+                        <div class="value">RiskGuard Return Risk Random Forest</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="label">Model Type</div>
+                        <div class="value">RandomForestClassifier</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="label">Purpose</div>
+                        <div class="value">Return-risk & loss prioritization</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="label">Dataset</div>
+                        <div class="value">Synthetic e-commerce sales transactions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card business-card">
+                <div class="metric-label">Operating Rule</div>
+                <h3 style="margin:7px 0 8px;font-size:20px">Flag top orders by expected return loss</h3>
+                <p style="margin:0;color:#5E6259;font-size:14px;line-height:1.65">
+                    RiskGuard ranks orders by their expected financial exposure from a potential
+                    return and concentrates merchant review capacity on the highest-value risk.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUSINESS LOGIC -->
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2>How RiskGuard Calculates Expected Return Loss</h2>
+                <span>The economic ranking logic behind order prioritization</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="formula">
+                <div class="formula-step">
+                    <strong>Return Probability</strong>
+                    <span>Predicted probability that the order is returned</span>
+                </div>
+                <div class="arrow">×</div>
+                <div class="formula-step">
+                    <strong>Loss If Returned</strong>
+                    <span>max(Profit Margin, 0) + Shipping Cost</span>
+                </div>
+                <div class="arrow">=</div>
+                <div class="formula-step">
+                    <strong>Expected Return Loss</strong>
+                    <span>Financial exposure used for ranking</span>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Core formula:</strong>
+                Expected Return Loss = Return Probability × Loss If Returned.
+                The loss-if-returned definition is max(profit margin, 0) + shipping cost.
+            </div>
+        </div>
+    </section>
+
+    <!-- REVIEW STRATEGY -->
+    <section class="section">
+        <div class="two-col">
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <h2>Review Strategy</h2>
+                        <span>Limited review capacity</span>
+                    </div>
+                </div>
+
+                <div class="kpi-list">
+                    <div class="kpi-row">
+                        <span>Validation review workload</span>
+                        <strong>10.01%</strong>
+                    </div>
+                    <div class="kpi-row">
+                        <span>Test review workload</span>
+                        <strong>10.14%</strong>
+                    </div>
+                    <div class="kpi-row">
+                        <span>Expected-loss cutoff</span>
+                        <strong>₹42.824297</strong>
+                    </div>
+                    <div class="kpi-row">
+                        <span>Test orders</span>
+                        <strong>5,277</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <h2>Why the Lift Matters</h2>
+                        <span>Business interpretation</span>
+                    </div>
+                </div>
+
+                <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.7">
+                    At roughly a 10% review workload, the ranking strategy captures
+                    42.48% of the realized loss proxy. That is 4.24 times the loss
+                    captured by randomly selecting 10% of orders.
+                </p>
+
+                <div class="note warning">
+                    <strong>Important:</strong>
+                    The dataset is synthetic and the loss measure is a transparent
+                    dataset-derived proxy. These results demonstrate ranking value,
+                    not money actually saved.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLASSIFICATION METRICS -->
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2>Return Risk Model Metrics</h2>
+                <span>Held-out test-set classification performance</span>
+            </div>
+            <span class="badge">TEST SET</span>
+        </div>
+
+        <div class="metric-grid">
+            <div class="small-metric">
+                <div class="metric-label">ROC-AUC</div>
+                <div class="value">0.5809</div>
+                <div class="desc">Ranking discrimination</div>
+            </div>
+            <div class="small-metric">
+                <div class="metric-label">PR-AUC</div>
+                <div class="value">0.0673</div>
+                <div class="desc">Precision-recall area</div>
+            </div>
+            <div class="small-metric">
+                <div class="metric-label">Precision</div>
+                <div class="value">5.79%</div>
+                <div class="desc">Positive prediction precision</div>
+            </div>
+            <div class="small-metric">
+                <div class="metric-label">Recall</div>
+                <div class="value">10.20%</div>
+                <div class="desc">Positive cases captured</div>
+            </div>
+            <div class="small-metric">
+                <div class="metric-label">F1 Score</div>
+                <div class="value">0.0739</div>
+                <div class="desc">Precision-recall balance</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALIDATION / TEST -->
+    <section class="section">
+        <div class="card">
+            <div class="section-header">
+                <div>
+                    <h2>Validation vs Test Operating Performance</h2>
+                    <span>Review workload consistency</span>
+                </div>
+            </div>
+
+            <table class="comparison">
+                <thead>
+                    <tr>
+                        <th>Measure</th>
+                        <th>Validation</th>
+                        <th>Test</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td><strong>Review Workload</strong></td>
+                        <td>10.01%</td>
+                        <td><strong>10.14%</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loss Capture Rate</strong></td>
+                        <td>—</td>
+                        <td>42.48%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loss Capture Lift vs Random</strong></td>
+                        <td>—</td>
+                        <td>4.24×</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- DECISION FLOW -->
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2>RiskGuard Decision Flow</h2>
+                <span>From order information to merchant prioritization</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="flow">
+                <div class="flow-step">
+                    <div class="number">1</div>
+                    <strong>Order Data</strong>
+                    <span>Order and customer inputs</span>
+                </div>
+                <div class="flow-step">
+                    <div class="number">2</div>
+                    <strong>Return Probability</strong>
+                    <span>Model prediction</span>
+                </div>
+                <div class="flow-step">
+                    <div class="number">3</div>
+                    <strong>Loss If Returned</strong>
+                    <span>Margin + shipping logic</span>
+                </div>
+                <div class="flow-step">
+                    <div class="number">4</div>
+                    <strong>Expected Loss</strong>
+                    <span>Probability × loss</span>
+                </div>
+                <div class="flow-step">
+                    <div class="number">5</div>
+                    <strong>Priority / Action</strong>
+                    <span>Merchant review focus</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPLAINABILITY -->
+    <section class="section">
+        <div class="card">
+            <div class="section-header">
+                <div>
+                    <h2>Model Explainability</h2>
+                    <span>Order-level reasoning available in RiskGuard</span>
+                </div>
+            </div>
+
+            <div class="three-col">
+                <div class="info-box">
+                    <div class="label">SHAP Explanations</div>
+                    <div class="value">Available</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Top Risk Factors</div>
+                    <div class="value">Stored per transaction</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Top Safe Factors</div>
+                    <div class="value">Stored per transaction</div>
+                </div>
+            </div>
+
+            <div class="note">
+                These explainability artifacts support order-level investigation.
+                The page does not invent feature importance values that are not present
+                in the verified evaluation artifact.
+            </div>
+        </div>
+    </section>
+
+    <div class="footer">
+        RiskGuard AI · Verified model evaluation artifacts
+    </div>
+
+</main>
+
+
+
+</body>
+</html>
+

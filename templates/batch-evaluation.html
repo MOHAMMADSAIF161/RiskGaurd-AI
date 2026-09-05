@@ -1,0 +1,1129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Evaluation | RiskGuard AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .riskguard-navbar {
+            width: 100%;
+            height: 88px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 32px;
+        }
+
+        .riskguard-navbar-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .riskguard-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .riskguard-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .riskguard-brand-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .riskguard-brand-text span {
+            color: #2563eb;
+        }
+
+        .riskguard-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .riskguard-nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 9px 14px;
+            border-radius: 8px;
+        }
+
+        .riskguard-nav-links a:hover,
+        .riskguard-nav-links a.active {
+            color: #1d4ed8;
+            background: #eff6ff;
+        }
+
+        .page {
+            width: 100%;
+            padding: 34px 32px 50px;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 7px;
+            font-size: 30px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .notice {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            font-size: 14px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+            margin-bottom: 22px;
+        }
+
+        .card h2 {
+            margin: 0 0 18px;
+            font-size: 21px;
+        }
+
+        .input-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .input-table th,
+        .input-table td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .input-table th {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #ffffff;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 9px;
+            padding: 11px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 14px;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 17px;
+        }
+
+        .summary-label {
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .results-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        .results-table th {
+            font-size: 13px;
+            color: #64748b;
+            background: #f8fafc;
+        }
+
+        .results-table td {
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .allow {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .review {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .block {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty {
+            padding: 30px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .error {
+            display: none;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            padding: 12px 15px;
+            border-radius: 9px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .summary-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .riskguard-nav-links a {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page {
+                padding: 24px 16px;
+            }
+
+            .riskguard-navbar {
+                padding: 0 16px;
+            }
+
+            .riskguard-nav-links {
+                display: none;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .input-table {
+                min-width: 850px;
+            }
+        }
+    </style>
+
+<style id="riskguard-unified-layout">
+
+/* =========================================================
+   RiskGuard AI — Unified Application Layout
+   Applied as a final visual layer only; functionality preserved.
+   ========================================================= */
+:root{
+    --rg-primary:#2563eb;
+    --rg-primary-hover:#1d4ed8;
+    --rg-bg:#f8fafc;
+    --rg-surface:#ffffff;
+    --rg-border:#e5e7eb;
+    --rg-text:#111827;
+    --rg-muted:#6b7280;
+    --rg-shadow:0 10px 30px rgba(15,23,42,.06);
+}
+html{
+    font-size:15px;
+    -webkit-text-size-adjust:100%;
+}
+body{
+    background:var(--rg-bg) !important;
+    color:var(--rg-text);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Shared application header ---------- */
+.riskguard-navbar,
+header{
+    width:100%;
+    min-height:76px;
+    height:76px;
+    background:rgba(255,255,255,.96) !important;
+    border-bottom:1px solid var(--rg-border) !important;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    backdrop-filter:blur(12px);
+}
+.riskguard-navbar-inner,
+header > .container.navbar{
+    width:min(1200px,92%);
+    max-width:1200px;
+    height:76px;
+    min-height:76px;
+    margin:0 auto;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+}
+.riskguard-brand,
+header .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    flex-shrink:0;
+}
+.riskguard-logo,
+header .logo-icon{
+    width:42px !important;
+    height:42px !important;
+    min-width:42px;
+    border-radius:12px !important;
+    background:#2563eb !important;
+    color:#fff !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px !important;
+    font-weight:800 !important;
+}
+.riskguard-brand-text,
+header .logo h2{
+    font-size:21px !important;
+    line-height:1.2;
+    font-weight:700 !important;
+    color:#111827;
+    white-space:nowrap;
+}
+.riskguard-brand-text span,
+header .logo span{
+    color:#2563eb !important;
+}
+.riskguard-nav-links,
+header nav{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:28px !important;
+    margin:0;
+}
+.riskguard-nav-links a,
+header nav a{
+    text-decoration:none;
+    color:#6b7280 !important;
+    font-size:14px !important;
+    line-height:1.2;
+    font-weight:500 !important;
+    padding:9px 0 !important;
+    border-radius:9px;
+    white-space:nowrap;
+    transition:color .15s ease,background .15s ease;
+}
+.riskguard-nav-links a:hover,
+.riskguard-nav-links a.active,
+header nav a:hover,
+header nav a.active{
+    color:#2563eb !important;
+}
+.riskguard-nav-links a.active,
+header nav a.active{
+    font-weight:700 !important;
+}
+
+/* ---------- Shared page width ---------- */
+main.container,
+main > .container,
+.page{
+    width:min(1200px,92%) !important;
+    max-width:1200px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+}
+
+/* ---------- Shared cards ---------- */
+.card,
+.stat-card,
+.risk-card,
+.chart-card,
+.transactions-card,
+.table-card,
+.hero,
+.toolbar,
+.header-card,
+.notice{
+    box-shadow:var(--rg-shadow);
+}
+
+/* ---------- Shared headings ---------- */
+h1{font-weight:700;}
+h2,h3{font-weight:700;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        width:calc(100% - 32px);
+    }
+    .riskguard-nav-links,
+    header nav{
+        gap:16px !important;
+    }
+}
+@media (max-width:720px){
+    .riskguard-navbar,
+    header,
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        min-height:72px;
+        height:auto;
+    }
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        min-height:72px;
+        height:auto;
+        padding:12px 0;
+        flex-wrap:wrap;
+    }
+    .riskguard-nav-links,
+    header nav{
+        width:100%;
+        justify-content:flex-start;
+        overflow-x:auto;
+        padding-bottom:2px;
+        gap:18px !important;
+        scrollbar-width:none;
+    }
+    .riskguard-nav-links::-webkit-scrollbar,
+    header nav::-webkit-scrollbar{display:none;}
+}
+
+
+/* Batch Evaluation — same application canvas as Dashboard */
+.page{
+    width:min(1200px,92%) !important;
+    max-width:1200px !important;
+    margin:0 auto !important;
+    padding:42px 0 70px !important;
+}
+.page-header{margin-bottom:24px !important;}
+.page-header h1{font-size:30px !important;line-height:1.25 !important;}
+.card{border-radius:16px !important;padding:24px !important;}
+.summary-grid{grid-template-columns:repeat(4,1fr) !important;gap:20px !important;}
+.summary-card{border-radius:14px !important;padding:20px !important;}
+.summary-value{font-size:28px !important;}
+@media(max-width:980px){.summary-grid{grid-template-columns:repeat(2,1fr) !important;}}
+@media(max-width:600px){.summary-grid{grid-template-columns:1fr !important;}}
+
+</style>
+<style>
+/* =========================================================
+   RISKGUARD - GLOBAL PAGE WIDTH & LAYOUT
+   Visual/layout only - does not change application logic
+   ========================================================= */
+
+:root {
+    --rg-page-width: 1200px;
+}
+
+/* Main page containers */
+main,
+.main,
+.main-content,
+.content,
+.container,
+.page-container,
+.dashboard-container,
+.app-container {
+    width: 100%;
+    max-width: var(--rg-page-width);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Prevent oversized sections */
+section,
+.card,
+.panel,
+.table-container,
+.chart-container {
+    box-sizing: border-box;
+}
+
+/* Consistent page horizontal spacing */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Tables stay inside the page */
+table {
+    max-width: 100%;
+}
+
+/* Images/charts never overflow */
+img,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+/* Large screens */
+@media (min-width: 1250px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        max-width: 1200px;
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1249px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+</style>
+<style id="riskguard-common-layout">
+/* =========================================================
+   RISKGUARD - SAME WIDTH AS HOME / CREATE ORDER
+   VISUAL ONLY - NO LOGIC CHANGES
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Main application content */
+main,
+main.container,
+.main,
+.main-content,
+.content,
+.content-wrapper,
+.page-content,
+.page-container,
+.dashboard,
+.dashboard-container,
+.orders-container,
+.order-container,
+.performance-container,
+.model-performance-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Keep the actual page content aligned */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Prevent cards/tables from becoming wider than the page */
+.card,
+.cards,
+.panel,
+.section,
+.table-container,
+.chart-container,
+.metrics-container,
+.stats-container {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tables */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Charts */
+canvas,
+svg,
+img {
+    max-width: 100%;
+}
+
+/* Desktop */
+@media (min-width: 1250px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        max-width: 1200px;
+    }
+}
+
+/* Laptop / medium screen */
+@media (max-width: 1249px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="riskguard-navbar">
+    <div class="riskguard-navbar-inner">
+        <a href="/" class="riskguard-brand">
+            <div class="riskguard-logo">RG</div>
+            <div class="riskguard-brand-text">
+                RiskGuard <span>AI</span>
+            </div>
+        </a>
+
+        <nav class="riskguard-nav-links">
+            <a href="/">Home</a>
+            <a href="/payment">Payment</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/create-order-page">Create Order</a>
+            <a href="/transactions">Transactions</a>
+            <a href="/model-performance">Model Performance</a>
+            <a href="/batch-evaluation" class="active">Batch Evaluation</a>
+        </nav>
+    </div>
+</header>
+
+<main class="page">
+
+    <div class="page-header">
+        <h1>Batch Risk Evaluation</h1>
+        <p>Evaluate multiple transactions through the production RiskGuard AI scoring pipeline.</p>
+    </div>
+
+    <div class="notice">
+        <strong>Dry Run:</strong>
+        Batch evaluation does not create real payments, transactions, or audit records.
+        Results are generated using the active production risk policy.
+    </div>
+
+    <div id="errorBox" class="error"></div>
+
+    <div class="card">
+        <h2>Transaction Inputs</h2>
+
+        <div class="results-table-wrapper">
+            <table class="input-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Amount (INR)</th>
+                        <th>Email</th>
+                        <th>Contact</th>
+                        <th>Method</th>
+                    </tr>
+                </thead>
+
+                <tbody id="inputRows"></tbody>
+            </table>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn-primary" onclick="runBatch()">
+                Run Batch Evaluation
+            </button>
+
+            <button class="btn-secondary" onclick="resetInputs()">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <div class="summary-grid" id="summaryGrid">
+        <div class="summary-card">
+            <div class="summary-label">Total</div>
+            <div class="summary-value" id="total">0</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">ALLOW</div>
+            <div class="summary-value" id="allow">0</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">MANUAL REVIEW</div>
+            <div class="summary-value" id="review">0</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">BLOCK</div>
+            <div class="summary-value" id="block">0</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">LOW</div>
+            <div class="summary-value" id="low">0</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">MEDIUM</div>
+            <div class="summary-value" id="medium">0</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">HIGH</div>
+            <div class="summary-value" id="high">0</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Batch Results</h2>
+
+        <div class="results-table-wrapper">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Amount</th>
+                        <th>Model 2</th>
+                        <th>Model 3</th>
+                        <th>Fusion Risk</th>
+                        <th>Risk Band</th>
+                        <th>Decision</th>
+                        <th>Fraud</th>
+                    </tr>
+                </thead>
+
+                <tbody id="resultsBody">
+                    <tr>
+                        <td colspan="8" class="empty">
+                            Run a batch evaluation to view results.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<script>
+
+const defaultTransactions = [
+    {
+        amount: 100,
+        email: "batch-test-1@riskguard.ai",
+        contact: "9000000001",
+        method: "upi"
+    },
+    {
+        amount: 500,
+        email: "batch-test-2@riskguard.ai",
+        contact: "9000000002",
+        method: "card"
+    },
+    {
+        amount: 5000,
+        email: "batch-test-3@riskguard.ai",
+        contact: "9000000003",
+        method: "upi"
+    }
+];
+
+function renderInputs() {
+
+    const body = document.getElementById("inputRows");
+
+    body.innerHTML = defaultTransactions.map((t, index) => `
+        <tr>
+            <td>${index + 1}</td>
+
+            <td>
+                <input
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    id="amount-${index}"
+                    value="${t.amount}"
+                >
+            </td>
+
+            <td>
+                <input
+                    type="email"
+                    id="email-${index}"
+                    value="${t.email}"
+                >
+            </td>
+
+            <td>
+                <input
+                    type="text"
+                    id="contact-${index}"
+                    value="${t.contact}"
+                >
+            </td>
+
+            <td>
+                <select id="method-${index}">
+                    <option value="upi" ${t.method === "upi" ? "selected" : ""}>UPI</option>
+                    <option value="card" ${t.method === "card" ? "selected" : ""}>Card</option>
+                    <option value="netbanking">Netbanking</option>
+                    <option value="wallet">Wallet</option>
+                </select>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function getInputs() {
+
+    return defaultTransactions.map((_, index) => ({
+        amount: Number(document.getElementById(`amount-${index}`).value),
+        email: document.getElementById(`email-${index}`).value,
+        contact: document.getElementById(`contact-${index}`).value,
+        method: document.getElementById(`method-${index}`).value
+    }));
+}
+
+async function runBatch() {
+
+    const errorBox = document.getElementById("errorBox");
+    errorBox.style.display = "none";
+    errorBox.textContent = "";
+
+    const transactions = getInputs();
+
+    try {
+
+        const response = await fetch("/api/batch-evaluate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                transactions
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Batch evaluation failed.");
+        }
+
+        renderSummary(data.summary);
+        renderResults(data.results);
+
+    } catch (error) {
+
+        errorBox.textContent = error.message;
+        errorBox.style.display = "block";
+    }
+}
+
+function renderSummary(summary) {
+
+    document.getElementById("total").textContent = summary.total;
+    document.getElementById("allow").textContent = summary.allow;
+    document.getElementById("review").textContent = summary.manual_review;
+    document.getElementById("block").textContent = summary.block;
+    document.getElementById("low").textContent = summary.low;
+    document.getElementById("medium").textContent = summary.medium;
+    document.getElementById("high").textContent = summary.high;
+}
+
+function riskClass(risk) {
+
+    if (risk === "LOW") return "low";
+    if (risk === "MEDIUM") return "medium";
+    if (risk === "HIGH") return "high";
+
+    return "";
+}
+
+function decisionClass(decision) {
+
+    if (decision === "ALLOW") return "allow";
+    if (decision === "MANUAL_REVIEW") return "review";
+    if (decision === "BLOCK") return "block";
+
+    return "";
+}
+
+function renderResults(results) {
+
+    const body = document.getElementById("resultsBody");
+
+    if (!results || !results.length) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty">
+                    No batch results available.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = results.map(r => `
+        <tr>
+            <td>${r.batch_index}</td>
+            <td>INR ${Number(r.amount).toFixed(2)}</td>
+            <td>${Number(r.model2_score).toFixed(4)}</td>
+            <td>${Number(r.model3_score).toFixed(4)}</td>
+            <td>${Number(r.risk_score_percent).toFixed(2)}%</td>
+            <td>
+                <span class="badge ${riskClass(r.risk_band)}">
+                    ${r.risk_band}
+                </span>
+            </td>
+            <td>
+                <span class="badge ${decisionClass(r.decision)}">
+                    ${r.decision}
+                </span>
+            </td>
+            <td>${r.fraud_prediction ? "FRAUD" : "LEGITIMATE"}</td>
+        </tr>
+    `).join("");
+}
+
+function resetInputs() {
+
+    defaultTransactions.forEach((t, index) => {
+        document.getElementById(`amount-${index}`).value = t.amount;
+        document.getElementById(`email-${index}`).value = t.email;
+        document.getElementById(`contact-${index}`).value = t.contact;
+        document.getElementById(`method-${index}`).value = t.method;
+    });
+
+    document.getElementById("resultsBody").innerHTML = `
+        <tr>
+            <td colspan="8" class="empty">
+                Run a batch evaluation to view results.
+            </td>
+        </tr>
+    `;
+
+    document.getElementById("total").textContent = "0";
+    document.getElementById("allow").textContent = "0";
+    document.getElementById("review").textContent = "0";
+    document.getElementById("block").textContent = "0";
+    document.getElementById("low").textContent = "0";
+    document.getElementById("medium").textContent = "0";
+    document.getElementById("high").textContent = "0";
+}
+
+renderInputs();
+
+</script>
+
+</body>
+</html>
+
+

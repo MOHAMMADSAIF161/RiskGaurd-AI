@@ -1,0 +1,481 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Queue | RiskGuard AI</title>
+
+
+
+
+
+<style>
+:root{
+  --primary:#8B9A6E;
+  --primary-dark:#68764F;
+  --success:#6F8054;
+  --warning:#B28B52;
+  --danger:#A95C55;
+  --bg:#FCFBF8;
+  --surface:#FFFFFF;
+  --sage-light:#EEF2E6;
+  --beige:#EAE2D6;
+  --grey:#EEEEEE;
+  --border:#DDD8CE;
+  --text:#172033;
+  --muted:#596273;
+  --shadow:0 10px 30px rgba(82,77,66,.08);
+}
+
+*,
+*::before,
+*::after{box-sizing:border-box}
+
+html,body{
+  width:100%;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:15px;
+  -webkit-font-smoothing:antialiased;
+}
+
+.container{
+  width:100%;
+  max-width:1240px;
+  margin:0 auto;
+  padding-left:28px;
+  padding-right:28px;
+}
+
+/* =========================
+   HOME / INDEX NAVBAR
+   ========================= */
+header{
+  width:100%;
+  height:72px;
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:20;
+  backdrop-filter:blur(10px);
+}
+
+.navbar{
+  height:72px;
+  min-height:72px;
+  width:100%;
+  max-width:none;
+  padding-left:5%;
+  padding-right:5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+
+.logo-box{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:var(--primary);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  letter-spacing:-.02em;
+}
+
+.logo h2{
+  margin:0;
+  color:var(--text);
+  font-size:20px;
+  line-height:1.1;
+  font-weight:800;
+}
+
+.logo span{
+  color:var(--primary);
+}
+
+nav{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:28px;
+  white-space:nowrap;
+}
+
+nav a{
+  position:relative;
+  padding:25px 0;
+  border-radius:0;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:14px;
+  font-weight:600;
+  transition:color .18s ease;
+}
+
+nav a:hover{
+  color:var(--primary-dark);
+  background:transparent;
+}
+
+nav a.active{
+  color:var(--primary-dark);
+  background:transparent;
+}
+
+nav a.active::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:2px;
+  background:var(--primary);
+  border-radius:2px 2px 0 0;
+}
+
+/* =========================
+   PAGE WIDTH / CANVAS
+   ========================= */
+.page{
+  width:100%;
+  max-width:1240px;
+  margin:0 auto;
+  padding:38px 28px 70px;
+}
+
+.page > .container{
+  width:100%;
+  max-width:none;
+  padding:0;
+  margin:0;
+}
+
+/* =========================
+   CONTENT CARDS
+   ========================= */
+.hero,
+.toolbar,
+.table-card,
+.stat{
+  background:var(--surface);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+.hero{
+  border-radius:16px;
+  padding:28px 30px;
+  margin-bottom:20px;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F7F2EB 100%);
+}
+
+.hero h1{
+  margin:0 0 8px;
+  color:var(--text);
+  font-size:31px;
+  line-height:1.2;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.toolbar{
+  border-radius:14px;
+  padding:18px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.search{
+  flex:1;
+  min-width:280px;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:#fff;
+  color:var(--text);
+  font:inherit;
+  outline:none;
+}
+
+.search:focus,
+select:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(139,154,110,.14);
+}
+
+select{
+  min-width:160px;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:#fff;
+  font:inherit;
+  color:var(--text);
+  outline:none;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.stat{
+  border-radius:14px;
+  padding:20px;
+  background:#fff;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:8px;
+}
+
+.stat-value{
+  color:var(--text);
+  font-size:27px;
+  font-weight:700;
+}
+
+.stat:nth-child(1){border-top:3px solid var(--primary)}
+.stat:nth-child(2){border-top:3px solid var(--danger)}
+.stat:nth-child(3){border-top:3px solid var(--warning)}
+.stat:nth-child(4){border-top:3px solid var(--primary-dark)}
+
+.table-card{
+  border-radius:16px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.table-head{
+  padding:20px 22px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  background:#fff;
+}
+
+.table-head h2{
+  margin:0;
+  color:var(--text);
+  font-size:19px;
+}
+
+.table-head p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  min-width:1120px;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:15px 16px;
+  text-align:left;
+  border-bottom:1px solid var(--grey);
+  font-size:13px;
+}
+
+th{
+  background:var(--beige);
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  font-weight:700;
+}
+
+tbody tr{
+  cursor:pointer;
+  transition:background .15s ease;
+}
+
+tbody tr:hover{
+  background:var(--bg);
+}
+
+.order-id{
+  color:var(--primary-dark);
+  font-weight:800;
+}
+
+.amount{
+  font-weight:700;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+/* =========================
+   BADGES / STATUS
+   ========================= */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.low,.safe,.paid{
+  color:#596A3F;
+  background:#E5EBD9;
+}
+
+.medium,.contact{
+  color:#80663A;
+  background:#F3E7CF;
+}
+
+.high,.review{
+  color:#8D4B45;
+  background:#F2DEDA;
+}
+
+.pending{
+  color:#60645C;
+  background:#EEEEEE;
+}
+
+/* =========================
+   STATES
+   ========================= */
+.loading,
+.empty,
+.error{
+  padding:50px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.error{
+  color:var(--danger);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media(max-width:1100px){
+  nav{gap:20px}
+  nav a{font-size:13px}
+}
+
+@media(max-width:900px){
+  .summary{grid-template-columns:repeat(2,1fr)}
+  nav{display:none}
+}
+
+@media(max-width:600px){
+  .container{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .navbar{
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  .page{
+    padding:28px 12px 50px;
+  }
+
+  .summary{
+    grid-template-columns:1fr;
+  }
+
+  .hero h1{
+    font-size:26px;
+  }
+
+  .hero{
+    padding:24px 20px;
+  }
+}
+</style>
+
+</head>
+<body>
+<header><div class="container navbar"><div class="logo"><div class="logo-box">RG</div><h2>RiskGuard <span>AI</span></h2></div><nav><a href="/">Home</a><a href="/create-order-page">Create Order</a><a class="active" href="/transactions">Order Queue</a><a href="/dashboard">Dashboard</a><a href="/model-performance">Model Performance</a></nav></div></header>
+<main class="page"><div class="container">
+<section class="hero"><h1>Merchant Orders</h1><p>Review orders created through RiskGuard AI. Each order includes return-risk evidence, payment status, and the merchant decision workflow.</p></section>
+<section class="toolbar"><input id="searchInput" class="search" placeholder="Search order ID, customer, email, category..."><select id="riskFilter"><option value="ALL">All Return Risk</option><option value="LOW">Low</option><option value="MEDIUM">Medium</option><option value="HIGH">High</option></select><select id="actionFilter"><option value="ALL">All Merchant Actions</option><option value="PENDING">Pending</option><option value="REVIEW_ORDER">Review Order</option><option value="MAKE_CONTACT">Make Contact</option><option value="SAFE">Safe</option></select><select id="paymentFilter"><option value="ALL">All Payment Status</option><option value="PENDING">Pending</option><option value="ORDER_CREATED">Order Created</option><option value="CAPTURED">Captured</option><option value="PAID">Paid</option></select></section>
+<section class="summary"><div class="stat"><div class="stat-label">Total Orders</div><div id="totalCount" class="stat-value">0</div></div><div class="stat"><div class="stat-label">High Priority</div><div id="highCount" class="stat-value">0</div></div><div class="stat"><div class="stat-label">Needs Review</div><div id="reviewCount" class="stat-value">0</div></div><div class="stat"><div class="stat-label">Expected Return Loss</div><div id="lossTotal" class="stat-value">₹0.00</div></div></section>
+<section class="table-card"><div class="table-head"><div><h2>Order Queue</h2><p>Click an order to open its complete order investigation and SHAP explanation.</p></div></div><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Category</th><th>Qty</th><th>Total</th><th>Return Risk</th><th>Expected Loss</th><th>Payment</th><th>Merchant Action</th></tr></thead><tbody id="orderTable"><tr><td colspan="9" class="loading">Loading orders...</td></tr></tbody></table></div></section>
+</div></main>
+<script>
+const state={orders:[]};
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function money(v){const n=Number(v);return Number.isFinite(n)?'₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}):'â€”';}
+function riskClass(v){const x=String(v||'').toUpperCase();return x==='LOW'?'low':x==='MEDIUM'?'medium':'high';}
+function actionClass(v){const x=String(v||'PENDING').toUpperCase();return x==='REVIEW_ORDER'?'review':x==='MAKE_CONTACT'?'contact':x==='SAFE'?'safe':'pending';}
+function actionLabel(v){return ({REVIEW_ORDER:'Review Order',MAKE_CONTACT:'Make Contact',SAFE:'Safe',PENDING:'Pending'})[v]||v||'Pending';}
+function paymentClass(v){const x=String(v||'PENDING').toUpperCase();return ['CAPTURED','PAID'].includes(x)?'paid':'pending';}
+function formatDate(v){if(!v)return'â€”';const d=new Date(v);return Number.isNaN(d.getTime())?'â€”':d.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});}
+function matches(o,q){if(!q)return true;return [o.order_id,o.customer_name,o.email,o.contact,o.category,o.payment_method].join(' ').toLowerCase().includes(q);}
+function render(){
+ const q=document.getElementById('searchInput').value.trim().toLowerCase();const rf=document.getElementById('riskFilter').value;const af=document.getElementById('actionFilter').value;const pf=document.getElementById('paymentFilter').value;const table=document.getElementById('orderTable');
+ const filtered=state.orders.filter(o=>matches(o,q)&&(rf==='ALL'||String(o.return_priority).toUpperCase()===rf)&&(af==='ALL'||String(o.merchant_action||'PENDING').toUpperCase()===af)&&(pf==='ALL'||String(o.payment_status||'PENDING').toUpperCase()===pf));
+ if(!filtered.length){table.innerHTML='<tr><td colspan="9" class="empty">No matching orders found. Create an order first.</td></tr>';return;}
+ table.innerHTML=filtered.map(o=>{
+  const risk=String(o.return_priority||'LOW').toUpperCase();const action=String(o.merchant_action||'PENDING').toUpperCase();const payment=String(o.payment_status||'PENDING').toUpperCase();
+  return `<tr onclick="openOrder('${encodeURIComponent(o.order_id)}')"><td class="order-id">${esc(o.order_id)}<div class="muted" style="font-size:11px;margin-top:4px">${esc(formatDate(o.created_at))}</div></td><td><strong>${esc(o.customer_name||'—')}</strong><div class="muted">${esc(o.email||o.contact||'')}</div></td><td>${esc(o.category||'—')}</td><td>${esc(o.quantity)}</td><td class="amount">${money(o.total_amount)}</td><td><span class="badge ${riskClass(risk)}">${esc(risk)} Â· ${Number(o.return_probability_percent||0).toFixed(2)}%</span></td><td class="amount">${money(o.expected_return_loss)}</td><td><span class="badge ${paymentClass(payment)}">${esc(payment)}</span></td><td><div onclick="event.stopPropagation()">
+<span class="badge ${actionClass(action)}">
+${esc(actionLabel(action))}
+</span>
+<div class="muted" style="font-size:10px;margin-top:5px">
+AI recommendation
+</div>
+</div></td></tr>`;
+ }).join('');
+}
+function updateSummary(){document.getElementById('totalCount').textContent=state.orders.length;document.getElementById('highCount').textContent=state.orders.filter(o=>String(o.return_priority).toUpperCase()==='HIGH').length;document.getElementById('reviewCount').textContent=state.orders.filter(o=>String(o.merchant_action||'PENDING').toUpperCase()==='REVIEW_ORDER').length;const total=state.orders.reduce((s,o)=>s+(Number(o.expected_return_loss)||0),0);document.getElementById('lossTotal').textContent=money(total);}
+async function loadOrders(){try{const r=await fetch('/api/orders?limit=500',{cache:'no-store'});if(!r.ok)throw new Error('Orders API returned '+r.status);const data=await r.json();state.orders=Array.isArray(data.orders)?data.orders:[];updateSummary();render();}catch(e){document.getElementById('orderTable').innerHTML='<tr><td colspan="9" class="error">Unable to load orders. '+esc(e.message)+'</td></tr>';}}
+function openOrder(id){window.location.href='/transaction-details?order_id='+id;}
+async function setAction(id,action){try{const r=await fetch('/api/orders/'+id+'/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action})});if(!r.ok){const d=await r.json();throw new Error(d.detail||'Unable to update action');}const updated=await r.json();const order=updated.order;const i=state.orders.findIndex(o=>o.order_id===order.order_id);if(i>=0)state.orders[i]=order;updateSummary();render();}catch(e){alert(e.message);}}
+document.getElementById('searchInput').addEventListener('input',render);document.getElementById('riskFilter').addEventListener('change',render);document.getElementById('actionFilter').addEventListener('change',render);document.getElementById('paymentFilter').addEventListener('change',render);loadOrders();
+</script>
+</body>
+</html>
+

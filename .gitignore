@@ -1,0 +1,31 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+# Local database
+riskguard.db
+*.db
+*.sqlite
+*.sqlite3
+# Jupyter
+.ipynb_checkpoints/
+# Temporary / migration scripts
+fix_sequences.py
+migrate_to_neon.py
+tunnel.py
+# Evaluation / temporary datasets
+models/**/X_test*.pkl
+# Local/duplicate model artifacts
+models/Fusion_v1.0/model2_xgb.pkl
+models/Model2/model2_config.json
+models/Model2/model2_encoder.pkl
+models/Model2/model2_encoder_joblib.pkl
+models/Model2/model2_xgb.pkl
+models/Model2/model2_xgboost.json

@@ -1,0 +1,20 @@
+{
+  "model_name": "RiskGuard Return Risk Random Forest",
+  "model_type": "RandomForestClassifier",
+  "purpose": "Merchant return-risk and loss prioritization",
+  "operating_rule": "Flag top orders by expected return loss",
+  "expected_loss_cutoff": 42.824297,
+  "validation_review_workload_percent": 10.01,
+  "test_review_workload_percent": 10.14,
+  "test_loss_capture_rate": 0.4248,
+  "test_loss_capture_lift_vs_random": 4.24,
+  "test_roc_auc": 0.5809,
+  "test_pr_auc": 0.0673,
+  "test_precision": 0.0579,
+  "test_recall": 0.102,
+  "test_f1": 0.0739,
+  "loss_if_returned_definition": "max(profit_margin, 0) + shipping_cost",
+  "expected_return_loss_definition": "return_probability * loss_if_returned",
+  "dataset": "Synthetic e-commerce sales transactions dataset",
+  "test_orders": 5277
+}

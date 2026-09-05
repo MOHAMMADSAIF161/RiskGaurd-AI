@@ -1,0 +1,14 @@
+{
+    "transaction_id": 2988000,
+    "transaction_amount": 213.0,
+    "model2_probability": 0.41814205050468445,
+    "model3_probability": 0.48889437317848206,
+    "model2_weight": 0.7,
+    "model3_weight": 0.3,
+    "combined_risk": 0.4393677473068237,
+    "risk_score": 43.93677473068237,
+    "risk_band": "MEDIUM",
+    "production_threshold": 0.7,
+    "decision": "LEGITIMATE / ALLOW",
+    "fusion_version": "Fusion_v1.0"
+}

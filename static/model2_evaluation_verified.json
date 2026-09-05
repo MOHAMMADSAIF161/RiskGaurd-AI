@@ -1,0 +1,107 @@
+{
+  "project": "RiskGuard-AI",
+  "evaluation_type": "verified_model2_validation",
+  "dataset": "IEEE-CIS Fraud Detection",
+  "split": "validation",
+  "validation_rows": 88581,
+  "fraud_rows": 3042,
+  "model": {
+    "name": "Model 2",
+    "artifact": "Production/Fusion_v1.0/model2_xgb.json",
+    "features": 432,
+    "categorical_features": 31
+  },
+  "metrics": {
+    "roc_auc": 0.8932986986438989,
+    "pr_auc": 0.49983004670546805,
+    "threshold": 0.7,
+    "precision": 0.6078528827037774,
+    "recall": 0.40203813280736356,
+    "f1": 0.48397309062129007,
+    "true_negative": 84750,
+    "false_positive": 789,
+    "false_negative": 1819,
+    "true_positive": 1223
+  },
+  "threshold_comparison": [
+    {
+      "threshold": 0.7,
+      "precision": 0.6078528827037774,
+      "recall": 0.40203813280736356,
+      "f1": 0.48397309062129007,
+      "tn": 84750,
+      "fp": 789,
+      "fn": 1819,
+      "tp": 1223
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.6711059640995947,
+      "recall": 0.3809993425378041,
+      "f1": 0.4860557768924303,
+      "tn": 84971,
+      "fp": 568,
+      "fn": 1883,
+      "tp": 1159
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.7456201822004205,
+      "recall": 0.3497698882314267,
+      "f1": 0.4761691653613784,
+      "tn": 85176,
+      "fp": 363,
+      "fn": 1978,
+      "tp": 1064
+    },
+    {
+      "threshold": 0.85,
+      "precision": 0.8160621761658031,
+      "recall": 0.3106508875739645,
+      "f1": 0.45,
+      "tn": 85326,
+      "fp": 213,
+      "fn": 2097,
+      "tp": 945
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.871822033898305,
+      "recall": 0.2705456936226167,
+      "f1": 0.4129453085800301,
+      "tn": 85418,
+      "fp": 121,
+      "fn": 2219,
+      "tp": 823
+    },
+    {
+      "threshold": 0.95,
+      "precision": 0.9196969696969697,
+      "recall": 0.1995397764628534,
+      "f1": 0.3279308481901675,
+      "tn": 85486,
+      "fp": 53,
+      "fn": 2435,
+      "tp": 607
+    }
+  ],
+  "fusion_configuration": {
+    "model2_weight": 0.7,
+    "model3_weight": 0.3,
+    "method": "weighted_average",
+    "production_threshold": 0.7
+  },
+  "model3_evaluation_status": {
+    "included_in_validation_metrics": false,
+    "reason": "Production Model 3 requires customer-history features based on customer_key. IEEE-CIS does not contain the production customer_key and the original Model 3 behavioral training data is unavailable."
+  },
+  "verification": {
+    "split_ids_verified": true,
+    "split_overlap": false,
+    "all_model2_features_available": true,
+    "production_model2_json_verified": true,
+    "production_model2_feature_count_verified": true,
+    "production_model3_feature_count_verified": true,
+    "fusion_formula_verified": true
+  }
+}

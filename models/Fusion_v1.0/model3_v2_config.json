@@ -1,0 +1,37 @@
+{
+    "model_name": "RiskGuard-AI Model 3 v2",
+    "model_type": "XGBoost",
+    "purpose": "Behavioral and velocity fraud detection",
+    "production_threshold": 0.7,
+    "roc_auc": 0.7425435819149232,
+    "pr_auc": 0.13475959343090219,
+    "best_iteration": 155,
+    "best_validation_pr_auc": 0.13456165232477774,
+    "num_features": 18,
+    "features": [
+        "TransactionAmt",
+        "previous_transactions",
+        "previous_avg_amount",
+        "amount_deviation",
+        "transactions_last_5min",
+        "transactions_last_10min",
+        "transactions_last_30min",
+        "transactions_last_1h",
+        "transactions_last_24h",
+        "amount_last_10min",
+        "amount_last_1h",
+        "amount_last_24h",
+        "time_since_previous",
+        "rapid_transaction_flag",
+        "high_velocity_flag",
+        "large_amount_deviation_flag",
+        "TransactionHour",
+        "TransactionDay"
+    ],
+    "risk_bands": {
+        "LOW": "< 0.25",
+        "MEDIUM": "0.25 - 0.50",
+        "HIGH": "0.50 - 0.70",
+        "CRITICAL": ">= 0.70"
+    }
+}

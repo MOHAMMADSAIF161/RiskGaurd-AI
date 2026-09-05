@@ -1,0 +1,1314 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard AI | Merchant Protection</title>
+
+    <style>
+        :root {
+            --sage: #8B9A6E;
+            --sage-dark: #68764F;
+            --sage-light: #EEF2E6;
+            --cream: #F7F2EB;
+            --beige: #EAE2D6;
+            --grey: #EEEEEE;
+            --text: #172033;
+            --muted: #596273;
+            --white: #FFFFFF;
+            --border: #DDD8CE;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: #FCFBF8;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        .navbar {
+            height: 72px;
+            background: rgba(255,255,255,.94);
+            border-bottom: 1px solid #ECE9E2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--sage);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 5px 14px rgba(139,154,110,.25);
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 20px;
+            line-height: 1.1;
+            letter-spacing: -.4px;
+        }
+
+        .brand-text span {
+            display: block;
+            color: #555;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            color: #343a40;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 25px 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--sage-dark);
+            border-bottom-color: var(--sage);
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+            max-width: 1240px;
+            margin: auto;
+            padding: 0 28px;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            min-height: 570px;
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            align-items: center;
+            gap: 55px;
+            padding: 65px 0 55px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 9px 15px;
+            border-radius: 30px;
+            background: var(--beige);
+            color: #4F5641;
+            font-size: 12px;
+            font-weight: 750;
+            letter-spacing: .45px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 5vw, 62px);
+            line-height: 1.03;
+            letter-spacing: -2.4px;
+            margin: 0 0 20px;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            color: var(--sage);
+        }
+
+        .hero-description {
+            max-width: 650px;
+            color: #424B59;
+            font-size: 18px;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 0 23px;
+            border-radius: 11px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .btn-primary {
+            background: var(--sage);
+            color: white;
+            box-shadow: 0 7px 18px rgba(139,154,110,.24);
+        }
+
+        .btn-primary:hover {
+            background: var(--sage-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #30363D;
+            border: 1px solid #CFCBC3;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--sage);
+            color: var(--sage-dark);
+        }
+
+        .hero-points {
+            display: flex;
+            gap: 23px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .hero-point {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #596273;
+            font-size: 13px;
+        }
+
+        .check {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--sage);
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* HERO VISUAL */
+
+        .hero-visual {
+            position: relative;
+            min-height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .visual-circle {
+            width: 365px;
+            height: 365px;
+            border-radius: 50%;
+            background: var(--cream);
+            position: absolute;
+            right: 25px;
+        }
+
+        .box {
+            width: 230px;
+            height: 170px;
+            background: linear-gradient(145deg, #F2DFC2, #DFC69F);
+            position: relative;
+            z-index: 2;
+            transform: perspective(500px) rotateY(-7deg);
+            box-shadow: 0 25px 40px rgba(80,65,40,.14);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 70px;
+        }
+
+        .box-top {
+            position: absolute;
+            top: -36px;
+            left: 0;
+            width: 230px;
+            height: 55px;
+            background: #E8D1A9;
+            transform: skewX(-35deg);
+            transform-origin: left bottom;
+            border-radius: 4px;
+        }
+
+        .box-label {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 4px;
+            font-weight: 800;
+            color: #596273;
+            box-shadow: 0 4px 12px rgba(0,0,0,.07);
+        }
+
+        .shield-card {
+            position: absolute;
+            z-index: 4;
+            top: 42px;
+            left: 20px;
+            width: 205px;
+            padding: 24px;
+            border-radius: 18px;
+            background: rgba(238,242,230,.96);
+            box-shadow: 0 15px 35px rgba(60,70,40,.10);
+        }
+
+        .shield-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .shield-card h3 {
+            font-size: 21px;
+            line-height: 1.15;
+            margin: 0;
+        }
+
+        .visual-note {
+            position: absolute;
+            z-index: 5;
+            right: 0;
+            top: 35px;
+            font-size: 13px;
+            color: #4C5442;
+            font-weight: 600;
+            max-width: 100px;
+        }
+
+        .visual-arrow {
+            position: absolute;
+            right: 88px;
+            top: 62px;
+            font-size: 36px;
+            color: var(--sage-dark);
+            transform: rotate(-25deg);
+        }
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+            padding: 58px 0;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .section-heading h2 {
+            margin: 0 0 8px;
+            font-size: 32px;
+            line-height: 1.2;
+            letter-spacing: -.7px;
+        }
+
+        .section-heading p {
+            max-width: 700px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        .features-section {
+            background: var(--sage-light);
+            border-radius: 18px;
+            padding: 30px 22px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 17px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 23px;
+            min-height: 175px;
+            border: 1px solid #E8E7E1;
+        }
+
+        .feature-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #DDE7CC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: #596273;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        /* =========================
+           WORKFLOW
+        ========================= */
+
+        .workflow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 35px;
+            position: relative;
+        }
+
+        .workflow-step {
+            position: relative;
+            background: white;
+            border: 1px solid #E3E0D9;
+            border-radius: 15px;
+            padding: 27px 20px 22px;
+            text-align: center;
+        }
+
+        .step-number {
+            position: absolute;
+            width: 27px;
+            height: 27px;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            background: var(--sage);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .step-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .workflow-step h3 {
+            font-size: 15px;
+            margin: 0 0 7px;
+        }
+
+        .workflow-step p {
+            color: #687180;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .workflow-arrow {
+            position: absolute;
+            top: 50%;
+            color: var(--sage);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .arrow-1 { left: 24.5%; }
+        .arrow-2 { left: 49.3%; }
+        .arrow-3 { left: 74%; }
+
+        /* =========================
+           MODEL
+        ========================= */
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: 1.3fr .8fr;
+            gap: 24px;
+        }
+
+        .model-info,
+        .pipeline {
+            border-radius: 17px;
+            border: 1px solid #E4E1D9;
+            padding: 29px;
+        }
+
+        .model-info {
+            background: #FAF9F5;
+        }
+
+        .pipeline {
+            background: var(--sage-light);
+        }
+
+        .model-info h2 {
+            font-size: 27px;
+            margin: 0 0 10px;
+        }
+
+        .model-info > p {
+            color: #4F5867;
+            font-size: 14px;
+            line-height: 1.65;
+            margin: 0 0 20px;
+        }
+
+        .feature-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid #DEDAD1;
+            font-size: 12px;
+            color: #333A44;
+        }
+
+        .pipeline h3 {
+            margin: 0 0 17px;
+            color: #4E5B3C;
+            font-size: 17px;
+        }
+
+        .pipeline-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(139,154,110,.2);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .pipeline-item:last-child {
+            border-bottom: 0;
+        }
+
+        .pipeline-number {
+            width: 31px;
+            height: 31px;
+            border-radius: 50%;
+            background: var(--sage);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        /* =========================
+           DECISIONS
+        ========================= */
+
+        .decision-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .decision-card {
+            border-radius: 15px;
+            padding: 23px;
+            border: 1px solid #E3E0D9;
+        }
+
+        .decision-low {
+            background: #F0F5E9;
+        }
+
+        .decision-medium {
+            background: #FBF4E5;
+        }
+
+        .decision-high {
+            background: #FAEDED;
+        }
+
+        .decision-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 11px;
+        }
+
+        .decision-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .low-dot { background: #69943B; }
+        .medium-dot { background: #E7A117; }
+        .high-dot { background: #D83C3C; }
+
+        .decision-card p {
+            color: #596273;
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        /* =========================
+           VALIDATION
+        ========================= */
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .evidence-card {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            background: white;
+            border: 1px solid #E4E1D9;
+            border-radius: 16px;
+            padding: 23px;
+        }
+
+        .evidence-number {
+            font-size: 39px;
+            line-height: 1;
+            font-weight: 850;
+            color: var(--sage-dark);
+            white-space: nowrap;
+        }
+
+        .evidence-card:nth-child(2) .evidence-number {
+            color: #A66C12;
+        }
+
+        .evidence-card strong {
+            display: block;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .evidence-card p {
+            margin: 0;
+            color: #657080;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .validation-note {
+            text-align: center;
+            color: #7A8089;
+            font-size: 11px;
+            margin-top: 14px;
+        }
+
+        /* =========================
+           FINAL CTA
+        ========================= */
+
+        .cta {
+            margin: 45px 0 60px;
+            background: var(--sage-light);
+            border: 1px solid #DCE4D0;
+            border-radius: 18px;
+            padding: 34px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .cta h2 {
+            margin: 0 0 7px;
+            font-size: 25px;
+        }
+
+        .cta p {
+            margin: 0;
+            color: #596273;
+            font-size: 14px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+            .nav-links {
+                gap: 15px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-visual {
+                min-height: 330px;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .model-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                height: auto;
+                min-height: 70px;
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                padding: 0 17px;
+            }
+
+            .hero {
+                padding: 45px 0 35px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .hero-description {
+                font-size: 16px;
+            }
+
+            .hero-points {
+                gap: 10px;
+                flex-direction: column;
+            }
+
+            .feature-grid,
+            .decision-grid,
+            .evidence-grid,
+            .workflow {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-arrow {
+                display: none;
+            }
+
+            .visual-circle {
+                width: 300px;
+                height: 300px;
+            }
+
+            .shield-card {
+                left: 0;
+            }
+
+            .visual-note {
+                right: 0;
+            }
+
+            .cta {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px;
+            }
+        }
+    </style>
+<style>
+/* =========================================================
+   RISKGUARD - GLOBAL PAGE WIDTH & LAYOUT
+   Visual/layout only - does not change application logic
+   ========================================================= */
+
+:root {
+    --rg-page-width: 1200px;
+}
+
+/* Main page containers */
+main,
+.main,
+.main-content,
+.content,
+.container,
+.page-container,
+.dashboard-container,
+.app-container {
+    width: 100%;
+    max-width: var(--rg-page-width);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Prevent oversized sections */
+section,
+.card,
+.panel,
+.table-container,
+.chart-container {
+    box-sizing: border-box;
+}
+
+/* Consistent page horizontal spacing */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Tables stay inside the page */
+table {
+    max-width: 100%;
+}
+
+/* Images/charts never overflow */
+img,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+/* Large screens */
+@media (min-width: 1250px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        max-width: 1200px;
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1249px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+
+    <a href="/" class="brand">
+        <div class="brand-icon">🛡</div>
+
+        <div class="brand-text">
+            <strong>RiskGuard AI</strong>
+            <span>Protect Merchant Revenue</span>
+        </div>
+    </a>
+
+    <div class="nav-links">
+        <a href="/" class="active">Home</a>
+        <a href="/create-order-page">Create Order</a>
+        <a href="/transactions">Order Queue</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/model-performance">Model Performance</a>
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div>
+
+            <div class="hero-badge">
+                AI-POWERED MERCHANT PROTECTION
+            </div>
+
+            <h1>
+                Protect Every Order.<br>
+                <span>Reduce Return Loss.</span>
+            </h1>
+
+            <p class="hero-description">
+                RiskGuard AI helps merchants identify higher-risk orders before
+                fulfillment, estimate potential return loss, and make smarter
+                decisions to protect their revenue.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="/create-order-page" class="btn btn-primary">
+                    Create New Order →
+                </a>
+
+                <a href="/transactions" class="btn btn-outline">
+                    ☷ &nbsp; View Order Queue
+                </a>
+
+            </div>
+
+            <div class="hero-points">
+
+                <div class="hero-point">
+                    <span class="check">✓</span>
+                    AI-powered insights
+                </div>
+
+                <div class="hero-point">
+                    <span class="check">✓</span>
+                    Reduce financial loss
+                </div>
+
+                <div class="hero-point">
+                    <span class="check">✓</span>
+                    Smarter order decisions
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO VISUAL -->
+        <div class="hero-visual">
+
+            <div class="visual-circle"></div>
+
+            <div class="shield-card">
+                <div class="shield-icon">🛡️</div>
+                <h3>Safer Orders<br>Higher Profits</h3>
+            </div>
+
+            <div class="box">
+                <div class="box-top"></div>
+                <div class="box-label">ORDER</div>
+            </div>
+
+            <div class="visual-arrow">↙</div>
+
+            <div class="visual-note">
+                AI<br>
+                Works for<br>
+                Your Business
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+    <section class="section features-section">
+
+        <div class="section-heading">
+            <h2>Built to Protect Merchant Revenue</h2>
+            <p>
+                Convert order data into actionable insights and focus attention
+                on orders that matter.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Return Risk Detection</h3>
+                <p>
+                    Estimate the probability that an order may be returned.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Expected Loss Estimation</h3>
+                <p>
+                    Combine return probability with the potential loss if the
+                    order is returned.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Order Prioritization</h3>
+                <p>
+                    Focus your attention on orders with greater potential
+                    financial impact.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>AI Merchant Recommendation</h3>
+                <p>
+                    Automatically classify orders into Safe, Make Contact,
+                    or Review Order.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- WORKFLOW -->
+    <section class="section">
+
+        <div class="section-heading">
+            <h2>How RiskGuard AI Works</h2>
+            <p>
+                From order information to a clear merchant decision.
+            </p>
+        </div>
+
+        <div class="workflow">
+
+            <div class="workflow-step">
+                <div class="step-number">1</div>
+                <div class="step-icon">🛒</div>
+                <h3>Order Details</h3>
+                <p>
+                    Enter order and customer information.
+                </p>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-number">2</div>
+                <div class="step-icon">🧠</div>
+                <h3>Return Risk Model</h3>
+                <p>
+                    Random Forest predicts return probability.
+                </p>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-number">3</div>
+                <div class="step-icon">📊</div>
+                <h3>Expected Return Loss</h3>
+                <p>
+                    Estimate potential financial impact.
+                </p>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-number">4</div>
+                <div class="step-icon">📋</div>
+                <h3>Merchant Recommendation</h3>
+                <p>
+                    Classify and suggest the appropriate action.
+                </p>
+            </div>
+
+            <div class="workflow-arrow arrow-1">→</div>
+            <div class="workflow-arrow arrow-2">→</div>
+            <div class="workflow-arrow arrow-3">→</div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MODEL -->
+    <section class="section">
+
+        <div class="model-grid">
+
+            <div class="model-info">
+
+                <h2>Return Risk Random Forest Model</h2>
+
+                <p>
+                    RiskGuard AI uses a Random Forest classifier to estimate
+                    the probability of an order being returned. The model
+                    analyzes current order attributes together with available
+                    customer behavior derived from previous orders in the
+                    merchant database.
+                </p>
+
+                <div class="feature-tags">
+                    <span class="tag">Price & Discount</span>
+                    <span class="tag">Quantity</span>
+                    <span class="tag">Product Category</span>
+                    <span class="tag">Payment Method</span>
+                    <span class="tag">Region</span>
+                    <span class="tag">Delivery Time</span>
+                    <span class="tag">Customer Age</span>
+                    <span class="tag">Previous Order Behavior</span>
+                </div>
+
+            </div>
+
+
+            <div class="pipeline">
+
+                <h3>Model Output Pipeline</h3>
+
+                <div class="pipeline-item">
+                    <span class="pipeline-number">01</span>
+                    Return Probability
+                </div>
+
+                <div class="pipeline-item">
+                    <span class="pipeline-number">02</span>
+                    Loss if Returned
+                </div>
+
+                <div class="pipeline-item">
+                    <span class="pipeline-number">03</span>
+                    Expected Return Loss
+                </div>
+
+                <div class="pipeline-item">
+                    <span class="pipeline-number">04</span>
+                    Priority Classification
+                </div>
+
+                <div class="pipeline-item">
+                    <span class="pipeline-number">05</span>
+                    AI Merchant Recommendation
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- DECISION -->
+    <section class="section">
+
+        <div class="section-heading">
+            <h2>From Prediction to Action</h2>
+            <p>
+                RiskGuard AI converts expected financial impact into a simple
+                merchant-facing priority.
+            </p>
+        </div>
+
+        <div class="decision-grid">
+
+            <div class="decision-card decision-low">
+                <div class="decision-title">
+                    <span class="decision-dot low-dot"></span>
+                    LOW — SAFE
+                </div>
+
+                <p>
+                    Lower expected return loss. You can process the order
+                    normally.
+                </p>
+            </div>
+
+
+            <div class="decision-card decision-medium">
+                <div class="decision-title">
+                    <span class="decision-dot medium-dot"></span>
+                    MEDIUM — MAKE CONTACT
+                </div>
+
+                <p>
+                    Moderate expected loss. You may contact the customer
+                    before fulfillment.
+                </p>
+            </div>
+
+
+            <div class="decision-card decision-high">
+                <div class="decision-title">
+                    <span class="decision-dot high-dot"></span>
+                    HIGH — REVIEW ORDER
+                </div>
+
+                <p>
+                    Higher expected loss. This order needs additional
+                    merchant attention.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- VALIDATION -->
+    <section class="section">
+
+        <div class="section-heading">
+
+            <h2>Validated on a Held-Out Test Period</h2>
+
+            <p>
+                These results describe the loss-ranking experiment,
+                not money directly saved.
+            </p>
+
+        </div>
+
+
+        <div class="evidence-grid">
+
+            <div class="evidence-card">
+
+                <div class="evidence-number">
+                    42.48%
+                </div>
+
+                <div>
+                    <strong>Realized Loss Proxy Captured</strong>
+
+                    <p>
+                        Within the top approximately 10% of orders ranked
+                        by expected return loss.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="evidence-card">
+
+                <div class="evidence-number">
+                    4.24×
+                </div>
+
+                <div>
+                    <strong>Lift Over Random Selection</strong>
+
+                    <p>
+                        Compared with a random 10% selection baseline on the
+                        held-out test period.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="validation-note">
+            Held-out test evaluation • Ranking-based loss capture
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+    <div class="cta">
+
+        <div>
+            <h2>Make Every Order Decision More Informed</h2>
+
+            <p>
+                Create an order and let RiskGuard AI evaluate its potential
+                return risk and financial impact.
+            </p>
+        </div>
+
+        <a href="/create-order-page" class="btn btn-primary">
+            Create New Order →
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>
+

@@ -1,0 +1,1914 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RiskGuard AI - Secure Payment</title>
+
+    <!-- Razorpay Checkout -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #EAE2D6,
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    #EEEEEE,
+                    transparent 35%
+                ),
+                #F7F2EB;
+
+            padding: 30px;
+        }
+
+        .container {
+            margin: 30px auto;
+        }
+
+        .container {
+
+            width: 100%;
+            max-width: 480px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border: 1px solid #E2DDD4;
+
+            border-radius: 20px;
+
+            padding: 32px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(82, 77, 66, 0.10);
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+        .logo {
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            color: #2F332B;
+        }
+
+        .logo span {
+
+            color: #8B9A6E;
+        }
+
+        .tagline {
+
+            margin-top: 7px;
+
+            color: #6F736A;
+
+            font-size: 14px;
+        }
+
+        .security-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            margin-top: 15px;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            background: #EEF2E7;
+
+            color: #8B9A6E;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #4D5148;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #D8D3CA;
+
+            border-radius: 10px;
+
+            background: white;
+
+            color: #2F332B;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+        input:focus {
+
+            outline: none;
+
+            border-color: #8B9A6E;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(139, 154, 110, 0.14);
+        }
+
+
+        /* =========================
+           PAYMENT BUTTON
+        ========================= */
+
+        .pay-btn {
+
+            width: 100%;
+
+            border: none;
+
+            border-radius: 11px;
+
+            padding: 15px;
+
+            margin-top: 5px;
+
+            background: #8B9A6E;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .pay-btn:hover {
+
+            background: #74845A;
+
+            transform: translateY(-1px);
+        }
+
+        .pay-btn:disabled {
+
+            background: #A6A99F;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        #message {
+
+            margin-top: 18px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            display: none;
+        }
+
+        #message.info {
+
+            display: block;
+
+            background: #EEF2E7;
+
+            color: #74845A;
+        }
+
+        #message.error {
+
+            display: block;
+
+            background: #F2DEDA;
+
+            color: #8D4B45;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #A6A99F;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 520px) {
+
+            body {
+
+                padding: 15px;
+            }
+
+            .container {
+
+                padding: 24px;
+            }
+
+        }
+
+    </style>
+
+
+<style>
+.home-button {
+    display: none !important;
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #8B9A6E;
+    border-radius: 8px;
+    background: white;
+    color: #8B9A6E;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.home-button.show {
+    display: block !important;
+}
+</style>
+
+<style id="riskguard-final-readability">
+
+/* =========================================================
+   RISKGUARD AI - FINAL READABLE UI
+   Clean SaaS / Daily-use typography
+   ========================================================= */
+
+html {
+    font-size: 15px !important;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+    letter-spacing: 0 !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+/* ---------- Page titles ---------- */
+
+.page-title h1,
+.page-header h1,
+.detail-header h1 {
+    font-size: 30px !important;
+    line-height: 1.25 !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px !important;
+}
+
+.page-title p,
+.page-header p,
+.detail-header p {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+}
+
+/* ---------- Section titles ---------- */
+
+.section-heading h2,
+.section-header h2,
+.section-title,
+.info-card h2,
+.section-card h2,
+.chart-header h3 {
+    font-size: 21px !important;
+    line-height: 1.35 !important;
+    font-weight: 700 !important;
+}
+
+/* ---------- Card titles ---------- */
+
+.card h2,
+.card h3,
+.metric-card h2,
+.metric-card h3,
+.info-card h3,
+.section-card h3 {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    font-weight: 650 !important;
+}
+
+/* ---------- ALL NORMAL TEXT ---------- */
+
+p,
+span,
+div {
+    line-height: 1.5;
+}
+
+/* ---------- Forms ---------- */
+
+label,
+.form-label,
+.field-label,
+.input-label {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+}
+
+input,
+select,
+textarea {
+    font-family: inherit !important;
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+    min-height: 40px !important;
+}
+
+/* ---------- Policy controls ---------- */
+
+/* Policy card text */
+.policy-control,
+.policy-card,
+.control-group,
+.policy-section,
+.policy-grid {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+/* Policy labels */
+.policy-control label,
+.policy-card label,
+.control-group label,
+.policy-section label,
+.policy-grid label {
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+    font-weight: 600 !important;
+}
+
+/* Text next to sliders */
+.policy-control,
+.policy-card,
+.control-group {
+    padding: 18px !important;
+}
+
+/* Slider labels / values */
+.policy-control span,
+.policy-card span,
+.control-group span {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+/* Range controls */
+input[type="range"] {
+    min-height: auto !important;
+    height: 6px !important;
+    margin-top: 12px !important;
+    margin-bottom: 8px !important;
+}
+
+/* ---------- Buttons ---------- */
+
+button,
+.btn,
+.button {
+    font-family: inherit !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    min-height: 40px !important;
+    padding: 9px 16px !important;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+    font-size: 14px !important;
+}
+
+th {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    padding: 13px 14px !important;
+}
+
+td {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    padding: 13px 14px !important;
+}
+
+/* ---------- Important numbers ---------- */
+
+.stat-value,
+.metric-value,
+.risk-value {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
+}
+
+/* ---------- Supporting text ---------- */
+
+.stat-label,
+.metric-label,
+.risk-label {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+}
+
+.stat-description,
+.metric-sub,
+.info-box .label {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+/* ---------- Badges ---------- */
+
+.badge,
+.status,
+.security-badge,
+.rag-label {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    padding: 5px 9px !important;
+}
+
+/* ---------- Risk explanation ---------- */
+
+.rag-summary,
+.rag-grounding,
+.shap-summary {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+}
+
+/* ---------- Factor lists ---------- */
+
+.risk-factor,
+.safe-factor,
+.factor-item {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    padding: 11px 13px !important;
+    margin-bottom: 8px !important;
+}
+
+/* ---------- Navigation ---------- */
+
+nav a {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+}
+
+/* ---------- Footer ---------- */
+
+.footer,
+.footer-bottom {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* ---------- General spacing ---------- */
+
+.card,
+.metric-card,
+.info-card,
+.section-card {
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.grid,
+.cards-grid,
+.metrics-grid,
+.stats-grid,
+.section-grid {
+    gap: 18px !important;
+}
+
+/* ---------- Better form spacing ---------- */
+
+.form-group,
+.form-field {
+    margin-bottom: 17px !important;
+}
+
+label,
+.form-label {
+    margin-bottom: 7px !important;
+}
+
+/* ---------- Policy description ---------- */
+
+.policy-control p,
+.policy-card p,
+.control-group p,
+.policy-section p {
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+}
+
+/* ---------- Small text ---------- */
+
+small {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 768px) {
+
+    body {
+        font-size: 14px !important;
+    }
+
+    .page-title h1,
+    .page-header h1,
+    .detail-header h1 {
+        font-size: 26px !important;
+    }
+
+    .card,
+    .metric-card,
+    .info-card,
+    .section-card {
+        padding: 16px !important;
+    }
+
+    th,
+    td {
+        padding: 10px !important;
+    }
+}
+
+</style>
+
+<style id="riskguard-unified-layout">
+
+/* =========================================================
+   RiskGuard AI — Unified Application Layout
+   Applied as a final visual layer only; functionality preserved.
+   ========================================================= */
+:root{
+    --rg-primary:#8B9A6E;
+    --rg-primary-hover:#74845A;
+    --rg-bg:#F7F2EB;
+    --rg-surface:#ffffff;
+    --rg-border:#E2DDD4;
+    --rg-text:#2F332B;
+    --rg-muted:#6b7280;
+    --rg-shadow:0 10px 30px rgba(82,77,66,.06);
+}
+html{
+    font-size:15px;
+    -webkit-text-size-adjust:100%;
+}
+body{
+    background:var(--rg-bg) !important;
+    color:var(--rg-text);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Shared application header ---------- */
+.riskguard-navbar,
+header{
+    width:100%;
+    min-height:76px;
+    height:76px;
+    background:rgba(255,255,255,.96) !important;
+    border-bottom:1px solid var(--rg-border) !important;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    backdrop-filter:blur(12px);
+}
+.riskguard-navbar-inner,
+header > .container.navbar{
+    width:min(1200px,92%);
+    max-width:1200px;
+    height:76px;
+    min-height:76px;
+    margin:0 auto;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+}
+.riskguard-brand,
+header .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    flex-shrink:0;
+}
+.riskguard-logo,
+header .logo-icon{
+    width:42px !important;
+    height:42px !important;
+    min-width:42px;
+    border-radius:12px !important;
+    background:#8B9A6E !important;
+    color:#fff !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px !important;
+    font-weight:800 !important;
+}
+.riskguard-brand-text,
+header .logo h2{
+    font-size:21px !important;
+    line-height:1.2;
+    font-weight:700 !important;
+    color:#2F332B;
+    white-space:nowrap;
+}
+.riskguard-brand-text span,
+header .logo span{
+    color:#8B9A6E !important;
+}
+.riskguard-nav-links,
+header nav{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:28px !important;
+    margin:0;
+}
+.riskguard-nav-links a,
+header nav a{
+    text-decoration:none;
+    color:#6b7280 !important;
+    font-size:14px !important;
+    line-height:1.2;
+    font-weight:500 !important;
+    padding:9px 0 !important;
+    border-radius:9px;
+    white-space:nowrap;
+    transition:color .15s ease,background .15s ease;
+}
+.riskguard-nav-links a:hover,
+.riskguard-nav-links a.active,
+header nav a:hover,
+header nav a.active{
+    color:#8B9A6E !important;
+}
+.riskguard-nav-links a.active,
+header nav a.active{
+    font-weight:700 !important;
+}
+
+/* ---------- Shared page width ---------- */
+main.container,
+main > .container,
+.page{
+    width:min(1200px,92%) !important;
+    max-width:1200px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+}
+
+/* ---------- Shared cards ---------- */
+.card,
+.stat-card,
+.risk-card,
+.chart-card,
+.transactions-card,
+.table-card,
+.hero,
+.toolbar,
+.header-card,
+.notice{
+    box-shadow:var(--rg-shadow);
+}
+
+/* ---------- Shared headings ---------- */
+h1{font-weight:700;}
+h2,h3{font-weight:700;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        width:calc(100% - 32px);
+    }
+    .riskguard-nav-links,
+    header nav{
+        gap:16px !important;
+    }
+}
+@media (max-width:720px){
+    .riskguard-navbar,
+    header,
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        min-height:72px;
+        height:auto;
+    }
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        min-height:72px;
+        height:auto;
+        padding:12px 0;
+        flex-wrap:wrap;
+    }
+    .riskguard-nav-links,
+    header nav{
+        width:100%;
+        justify-content:flex-start;
+        overflow-x:auto;
+        padding-bottom:2px;
+        gap:18px !important;
+        scrollbar-width:none;
+    }
+    .riskguard-nav-links::-webkit-scrollbar,
+    header nav::-webkit-scrollbar{display:none;}
+}
+
+
+/* Payment intentionally remains a focused checkout screen, but uses the app typography */
+body{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+    background:#F7F2EB !important;
+}
+.container{
+    width:min(480px,100%) !important;
+    max-width:480px !important;
+    border-radius:18px !important;
+}
+.logo{font-size:28px !important;}
+
+</style>
+
+<style id="riskguard-sage-theme-final">
+/* =========================================================
+   RiskGuard AI — Color Hunt Sage / Cream / Beige / Grey
+   Visual layer only. Functionality preserved.
+   ========================================================= */
+
+:root{
+    --rg-sage:#8B9A6E;
+    --rg-sage-dark:#74845A;
+    --rg-cream:#F7F2EB;
+    --rg-beige:#EAE2D6;
+    --rg-grey:#EEEEEE;
+    --rg-border:#E2DDD4;
+    --rg-text:#2F332B;
+    --rg-muted:#6F736A;
+    --rg-shadow:0 20px 50px rgba(82,77,66,.10);
+}
+
+html, body{
+    background:
+        radial-gradient(circle at top left, #EAE2D6, transparent 35%),
+        radial-gradient(circle at bottom right, #EEEEEE, transparent 35%),
+        #F7F2EB !important;
+    color:var(--rg-text) !important;
+}
+
+body{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+}
+
+body > nav{
+    background:#FFFFFF !important;
+    border-bottom-color:var(--rg-border) !important;
+}
+
+body > nav a{
+    color:var(--rg-muted) !important;
+}
+
+body > nav a[href="/create-order-page"]{
+    color:var(--rg-sage-dark) !important;
+    font-weight:700 !important;
+}
+
+body > nav a:hover{
+    color:var(--rg-sage-dark) !important;
+}
+
+body > nav div:first-child{
+    color:var(--rg-text) !important;
+}
+
+body > nav div:first-child span{
+    color:var(--rg-sage) !important;
+}
+
+.container{
+    background:#FFFFFF !important;
+    border-color:var(--rg-border) !important;
+    box-shadow:var(--rg-shadow) !important;
+}
+
+.logo{
+    color:var(--rg-text) !important;
+}
+
+.logo span{
+    color:var(--rg-sage) !important;
+}
+
+.tagline,
+.footer,
+#amountNotice{
+    color:var(--rg-muted) !important;
+}
+
+.security-badge{
+    background:#EEF2E7 !important;
+    color:#596A3F !important;
+    border:1px solid #D7DFC9;
+}
+
+input{
+    background:#FFFFFF !important;
+    color:var(--rg-text) !important;
+    border-color:#D8D3CA !important;
+}
+
+input::placeholder{
+    color:#96998F !important;
+}
+
+input:focus{
+    border-color:var(--rg-sage) !important;
+    box-shadow:0 0 0 3px rgba(139,154,110,.14) !important;
+}
+
+#amount{
+    background:var(--rg-grey) !important;
+}
+
+.pay-btn{
+    background:var(--rg-sage) !important;
+    color:#FFFFFF !important;
+    box-shadow:0 7px 18px rgba(139,154,110,.22);
+}
+
+.pay-btn:hover{
+    background:var(--rg-sage-dark) !important;
+}
+
+.pay-btn:disabled{
+    background:#A6A99F !important;
+}
+
+#message.info{
+    background:#EEF2E7 !important;
+    color:#596A3F !important;
+    border:1px solid #D7DFC9;
+}
+
+#message.error{
+    background:#F2DEDA !important;
+    color:#8D4B45 !important;
+    border:1px solid #E2C6C1;
+}
+
+.home-button{
+    border-color:var(--rg-sage) !important;
+    background:#FFFFFF !important;
+    color:var(--rg-sage-dark) !important;
+}
+
+/* Inline order notice created by JavaScript */
+body > div[style*="RiskGuard Order"]{
+    background:#EEF2E7 !important;
+    border-color:#C9D3B8 !important;
+    color:#596A3F !important;
+}
+
+/* Keep the focused checkout-card appearance */
+@media (max-width:520px){
+    body{
+        padding:15px !important;
+    }
+}
+</style>
+
+<style>
+/* =========================================================
+   RISKGUARD - GLOBAL PAGE WIDTH & LAYOUT
+   Visual/layout only - does not change application logic
+   ========================================================= */
+
+:root {
+    --rg-page-width: 1200px;
+}
+
+/* Main page containers */
+main,
+.main,
+.main-content,
+.content,
+.container,
+.page-container,
+.dashboard-container,
+.app-container {
+    width: 100%;
+    max-width: var(--rg-page-width);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Prevent oversized sections */
+section,
+.card,
+.panel,
+.table-container,
+.chart-container {
+    box-sizing: border-box;
+}
+
+/* Consistent page horizontal spacing */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Tables stay inside the page */
+table {
+    max-width: 100%;
+}
+
+/* Images/charts never overflow */
+img,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+/* Large screens */
+@media (min-width: 1250px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        max-width: 1200px;
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1249px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+</style>
+</head>
+
+
+<body>
+<nav style="height:72px;background:#fff;border-bottom:1px solid #E2DDD4;display:flex;align-items:center;justify-content:space-between;padding:0 4%;position:sticky;top:0;z-index:20"><div style="font-weight:700;font-size:20px">RiskGuard <span style="color:#8B9A6E">AI</span></div><div style="display:flex;gap:22px;font-size:14px"><a href="/" style="color:#6b7280;text-decoration:none">Home</a><a href="/create-order-page" style="color:#8B9A6E;text-decoration:none">Create Order</a><a href="/transactions" style="color:#6b7280;text-decoration:none">Transactions</a><a href="/dashboard" style="color:#6b7280;text-decoration:none">Dashboard</a></div></nav>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+<div class="logo">
+            RiskGuard <span>AI</span>
+        </div>
+
+        <div class="tagline">
+            AI-powered real-time payment risk detection
+        </div>
+
+        <div class="security-badge">
+            Secure & protected
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         PAYMENT FORM
+    ========================= -->
+
+    <form id="paymentForm">
+
+
+        <!-- CUSTOMER NAME -->
+
+        <div class="form-group">
+
+            <label for="name">
+                Customer Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                autocomplete="name"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- EMAIL -->
+
+        <div class="form-group">
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="customer@example.com"
+                autocomplete="email"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- CONTACT -->
+
+        <div class="form-group">
+
+            <label for="contact">
+                Contact Number
+            </label>
+
+            <input
+                type="tel"
+                id="contact"
+                name="contact"
+                placeholder="10 digit mobile number"
+                autocomplete="tel"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- AMOUNT -->
+
+        <div class="form-group">
+
+            <label for="amount">
+                Amount (INR)
+            </label>
+
+            <input
+                type="text"
+                id="amount"
+                name="amount"
+                value="Loading..."
+                readonly
+                required
+                style="
+                    background:#EEEEEE;
+                    cursor:not-allowed;
+                    font-weight:700;
+                "
+            >
+
+            <small
+                id="amountNotice"
+                style="
+                    display:block;
+                    margin-top:6px;
+                    color:#6F736A;
+                    font-size:12px;
+                "
+            >
+                Loading amount from your order...
+            </small>
+
+        </div>
+
+
+
+        <!--
+            PAYMENT METHOD REMOVED
+
+            Razorpay Checkout will provide:
+            - UPI
+            - Cards
+            - Net Banking
+            - Wallets
+            - Other available methods
+        -->
+
+
+        <!-- PAY BUTTON -->
+
+        <button
+            type="submit"
+            id="payButton"
+            class="pay-btn"
+        >
+
+            Pay Securely
+
+        </button>
+
+    </form>
+
+<button type="button" id="homeButton" class="home-button" onclick="window.location.href='/dashboard'">
+    Go to Home
+</button>
+
+
+
+    <!-- =========================
+         STATUS MESSAGE
+    ========================= -->
+
+    <div id="message"></div>
+
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <div class="footer">
+
+        RiskGuard AI - Real-Time Fraud Risk Manager
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const form =
+    document.getElementById(
+        "paymentForm"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const payButton =
+    document.getElementById(
+        "payButton"
+    );
+
+const internalOrderId = new URLSearchParams(window.location.search).get("order_id") || sessionStorage.getItem("riskguard_order_id");
+
+let orderAmount = null;
+
+const amountInput =
+    document.getElementById("amount");
+
+const amountNotice =
+    document.getElementById("amountNotice");
+
+
+async function loadMerchantOrder() {
+
+    if (!internalOrderId) {
+
+        amountInput.value = "Order not found";
+
+        amountNotice.textContent =
+            "Please create an order first.";
+
+        payButton.disabled = true;
+
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "/api/orders/" +
+            encodeURIComponent(internalOrderId)
+        );
+
+        if (!response.ok) {
+            throw new Error("Order not found");
+        }
+
+        const order = await response.json();
+
+        orderAmount = Number(order.total_amount);
+
+        if (!Number.isFinite(orderAmount) || orderAmount <= 0) {
+            throw new Error("Invalid order amount");
+        }
+
+        amountInput.value =
+            "?" + orderAmount.toFixed(2);
+
+        amountNotice.textContent =
+            "Amount automatically loaded from Order " +
+            order.order_id;
+
+        payButton.disabled = false;
+
+        console.log(
+            "Merchant order loaded:",
+            order
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Order loading failed:",
+            error
+        );
+
+        amountInput.value =
+            "Unable to load";
+
+        amountNotice.textContent =
+            "Unable to load order amount.";
+
+        payButton.disabled = true;
+    }
+}
+
+loadMerchantOrder();
+
+if (internalOrderId) {
+    const notice = document.createElement("div");
+    notice.style.cssText = "margin:0 auto 18px;max-width:480px;padding:12px 16px;background:#EEF2E7;border:1px solid #C9D3B8;border-radius:10px;color:#74845A;font-size:13px;font-weight:700";
+    notice.textContent = "RiskGuard Order: " + internalOrderId + " — payment will be linked to this order.";
+    document.body.insertBefore(notice, document.querySelector(".container"));
+}
+
+
+
+/* =========================================================
+   SHOW MESSAGE
+========================================================= */
+
+function showMessage(
+    text,
+    type = "info"
+) {
+
+    message.innerText = text;
+
+    message.className = type;
+
+}
+
+
+
+/* =========================================================
+   CLEAR PAYMENT FORM
+========================================================= */
+
+function clearPaymentForm() {
+
+    /*
+     * Completely reset all customer fields.
+     */
+
+    form.reset();
+
+
+    /*
+     * Remove any previous message.
+     */
+
+    message.innerText = "";
+
+    message.className = "";
+
+
+    /*
+     * Make sure button is ready.
+     */
+
+    payButton.disabled = false;
+
+    payButton.innerText =
+        "Pay Securely";
+
+
+    /*
+     * Focus on customer name
+     * for the next transaction.
+     */
+
+    document
+        .getElementById("name")
+        .focus();
+
+}
+
+
+
+/* =========================================================
+   WAIT FOR WEBHOOK TRANSACTION
+========================================================= */
+
+async function waitForTransaction(
+    paymentId,
+    attempts = 15
+) {
+
+    for (
+        let attempt = 0;
+        attempt < attempts;
+        attempt++
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/transactions?limit=100"
+                );
+
+
+            if (response.ok) {
+
+                const data =
+                    await response.json();
+
+
+                const transactions =
+                    data.transactions || [];
+
+
+                const transaction =
+                    transactions.find(
+                        item =>
+                            item.payment_id ===
+                            paymentId
+                    );
+
+
+                if (transaction) {
+
+                    return transaction;
+
+                }
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                "Transaction polling error:",
+                error
+            );
+
+        }
+
+
+        /*
+         * Wait 2 seconds before
+         * checking again.
+         */
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    2000
+                )
+        );
+
+    }
+
+
+    return null;
+
+}
+
+
+
+/* =========================================================
+   PAYMENT FORM SUBMIT
+========================================================= */
+
+form.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        /* ============================================
+           GET CUSTOMER DETAILS
+        ============================================ */
+
+        const name =
+            document
+                .getElementById("name")
+                .value
+                .trim();
+
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+
+        const contact =
+            document
+                .getElementById("contact")
+                .value
+                .trim();
+
+
+        const amount = orderAmount;
+
+
+
+        /* ============================================
+           VALIDATION
+        ============================================ */
+
+        if (
+            !name ||
+            !email ||
+            !contact ||
+            !amount ||
+            amount <= 0
+        ) {
+
+            showMessage(
+                "Please enter valid payment details.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+
+        /* ============================================
+           DISABLE BUTTON
+        ============================================ */
+
+        payButton.disabled = true;
+
+        payButton.innerText =
+            "Creating Secure Order...";
+
+
+        showMessage(
+            "Connecting to RiskGuard AI...",
+            "info"
+        );
+
+
+
+        try {
+
+
+            /* ========================================
+               CREATE RAZORPAY ORDER
+            ======================================== */
+
+            const response =
+                await fetch(
+                    "/create-order",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                internal_order_id: internalOrderId
+
+                            })
+
+                    }
+                );
+
+
+
+            /* ========================================
+               CHECK RESPONSE
+            ======================================== */
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+
+                console.error(
+                    "Create order failed:",
+                    errorText
+                );
+
+
+                throw new Error(
+                    "Unable to create Razorpay order"
+                );
+
+            }
+
+
+
+            /* ========================================
+               GET ORDER
+            ======================================== */
+
+            const order =
+                await response.json();
+
+
+            console.log(
+                "Razorpay order:",
+                order
+            );
+
+
+
+            /* ========================================
+               RAZORPAY CHECKOUT
+            ======================================== */
+
+            const options = {
+
+                key:
+                    order.key_id,
+
+                amount:
+                    order.amount,
+
+                currency:
+                    order.currency,
+
+                name:
+                    "RiskGuard AI",
+
+                description:
+                    "RiskGuard AI Test Payment",
+
+                order_id:
+                    order.id,
+
+
+                /* ==================================
+                   CUSTOMER INFORMATION
+                ================================== */
+
+                prefill: {
+
+                    name:
+                        name,
+
+                    email:
+                        email,
+
+                    contact:
+                        contact
+
+                },
+
+
+                theme: {
+
+                    color:
+                        "#8B9A6E"
+
+                },
+
+
+                /* ==================================
+                   PAYMENT SUCCESS
+                ================================== */
+
+                handler:
+                    async function(
+                        paymentResponse
+                    ) {
+
+                        console.log(
+                            "Razorpay payment response:",
+                            paymentResponse
+                        );
+
+
+                        /*
+                         * Do not show any payment
+                         * success message.
+                         */
+
+                        payButton.innerText =
+                            "Processing...";
+
+
+                        /*
+                         * Wait for Razorpay webhook
+                         * to process the transaction.
+                         */
+
+                        await waitForTransaction(
+                            paymentResponse
+                                .razorpay_payment_id
+                        );
+
+
+                        /*
+                         * Completely clear the form.
+                         *
+                         * No risk information.
+                         * No SHAP.
+                         * No success message.
+                         */
+
+                        clearPaymentForm();
+
+                        sessionStorage.removeItem("riskguard_order_id");
+                        window.location.href = "/transactions";
+
+                    },
+
+
+                /* ==================================
+                   PAYMENT WINDOW CLOSED
+                ================================== */
+
+                modal: {
+
+                    ondismiss:
+                        function() {
+
+                            showMessage(
+                                "Payment window closed.",
+                                "info"
+                            );
+
+
+                            payButton.disabled =
+                                false;
+
+
+                            payButton.innerText =
+                                "Pay Securely";
+
+                        }
+
+                }
+
+            };
+
+
+
+            /* ========================================
+               CREATE RAZORPAY INSTANCE
+            ======================================== */
+
+            const razorpay =
+                new Razorpay(
+                    options
+                );
+
+
+
+            /* ========================================
+               PAYMENT FAILED
+            ======================================== */
+
+            razorpay.on(
+                "payment.failed",
+                function(response) {
+
+                    console.error(
+                        "Razorpay payment failed:",
+                        response
+                    );
+
+
+                    showMessage(
+                        "Payment failed. Please try again.",
+                "error"
+                    );
+
+
+                    payButton.disabled =
+                        false;
+
+
+                    payButton.innerText =
+                        "Pay Securely";
+
+                }
+            );
+
+
+
+            /* ========================================
+               OPEN RAZORPAY
+            ======================================== */
+
+            razorpay.open();
+
+
+        }
+        catch (error) {
+
+            console.error(
+                "RiskGuard payment error:",
+                error
+            );
+
+
+            showMessage(
+                "Payment failed. Please try again.",
+                "error"
+            );
+
+
+            payButton.disabled =
+                false;
+
+
+            payButton.innerText =
+                "Pay Securely";
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+

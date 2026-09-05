@@ -1,0 +1,2062 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction Investigation | RiskGuard AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#2563eb;--primary2:#1d4ed8;--bg:#f8fafc;--card:#fff;--border:#e5e7eb;--text:#111827;--muted:#64748b;--green:#059669;--amber:#d97706;--red:#dc2626;--shadow:0 10px 30px rgba(15,23,42,.06)}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,sans-serif}
+body{background:var(--bg);color:var(--text)}
+a{text-decoration:none;color:inherit}
+.container{width:min(1200px,92%);margin:auto}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.navbar{height:76px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:21px}.brand-box{width:40px;height:40px;border-radius:11px;background:var(--primary);color:white;display:grid;place-items:center;font-size:13px}.brand span{color:var(--primary)}
+nav{display:flex;gap:28px;color:var(--muted);font-weight:600;font-size:14px}nav a.active,nav a:hover{color:var(--primary)}
+.btn{border:0;border-radius:10px;padding:11px 17px;font-weight:700;cursor:pointer}.btn-primary{background:var(--primary);color:white}.btn-primary:hover{background:var(--primary2)}.btn-secondary{background:#eef2ff;color:#1d4ed8}
+main{padding:38px 0 70px}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:25px}.hero h1{font-size:32px;margin-bottom:8px}.hero p{color:var(--muted);line-height:1.6}.card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+.list-card{overflow:hidden}.list-head{padding:22px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:15px}.list-head h2{font-size:18px}.search{border:1px solid var(--border);border-radius:9px;padding:10px 12px;min-width:260px;outline:none}.search:focus{border-color:var(--primary)}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:left;padding:15px 18px;border-bottom:1px solid #eef2f7;font-size:13px}th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:#f8fafc}tbody tr{cursor:pointer}tbody tr:hover{background:#f8fafc}.id{color:var(--primary);font-weight:800}.amount{font-weight:700}.muted{color:var(--muted)}
+.badge{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:800}.low{background:#ecfdf5;color:#047857}.medium{background:#fffbeb;color:#b45309}.high{background:#fef2f2;color:#dc2626}.critical{background:#fef2f2;color:#991b1b}.unavailable{background:#f1f5f9;color:#64748b}.allow{background:#ecfdf5;color:#047857}.manual_review{background:#fff7ed;color:#c2410c}.block{background:#fef2f2;color:#b91c1c}
+.loading,.empty{padding:50px;text-align:center;color:var(--muted)}
+.detail-header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}.detail-header h1{font-size:30px}.detail-header p{color:var(--muted);margin-top:6px}.actions{display:flex;gap:10px}
+.statuses{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.full{grid-column:1/-1}.section-card{padding:24px}.section-card h2{font-size:18px;margin-bottom:20px}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.info{padding:14px;border:1px solid #eef2f7;border-radius:12px;background:#fafcff}.info small{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.info strong{font-size:14px;word-break:break-word}.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.score{padding:18px;border:1px solid var(--border);border-radius:14px}.score small{color:var(--muted);display:block;margin-bottom:9px}.score strong{font-size:26px}.score p{color:var(--muted);font-size:12px;margin-top:5px}
+.shap-actions{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.shap-summary{color:var(--muted);font-size:13px;line-height:1.6}.shap-content{display:none}.shap-content.show{display:block}.factor{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px;margin-top:10px;border:1px solid var(--border);border-radius:12px}.factor .name{font-weight:700}.factor .value{color:var(--muted);font-size:12px;margin-top:4px}.factor .impact{font-weight:800;font-size:12px}.risk-up{color:var(--red)}.risk-down{color:var(--green)}.explanation{padding:16px;background:#f8fafc;border-radius:12px;margin-bottom:12px;line-height:1.6;font-size:13px}
+.notice{padding:14px 16px;border-radius:12px;background:#eff6ff;color:#1d4ed8;font-size:13px;line-height:1.5;margin-bottom:20px}.error{padding:16px;border-radius:12px;background:#fef2f2;color:#b91c1c}
+@media(max-width:900px){.detail-grid{grid-template-columns:1fr}.full{grid-column:auto}.score-grid{grid-template-columns:repeat(2,1fr)}nav{display:none}.hero,.detail-header{align-items:flex-start;flex-direction:column}.search{min-width:0;width:100%}.list-head{flex-direction:column;align-items:stretch}}
+@media(max-width:600px){.score-grid,.info-grid{grid-template-columns:1fr}.container{width:94%}.main{padding-top:25px}}
+.rag-card{
+  margin-top:16px;
+  padding:20px;
+  border:1px solid #dbe5f1;
+  border-radius:16px;
+  background:#f8fbff;
+}
+
+.rag-label{
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:#2563eb;
+  margin-bottom:8px;
+}
+
+.rag-summary{
+  font-size:17px;
+  font-weight:600;
+  line-height:1.5;
+  color:#172033;
+  margin-bottom:18px;
+}
+
+.rag-section-title{
+  margin:20px 0 10px;
+  font-size:14px;
+  font-weight:700;
+  color:#172033;
+}
+
+.rag-grounding{
+  margin-top:18px;
+  padding:12px 14px;
+  border-radius:10px;
+  background:#eef4fb;
+  color:#526174;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.rag-card .factor{
+  background:#fff;
+  border:1px solid #e4eaf2;
+  border-radius:10px;
+  margin-bottom:8px;
+}
+</style>
+
+<style id="riskguard-final-readability">
+
+/* =========================================================
+   RISKGUARD AI - FINAL READABLE UI
+   Clean SaaS / Daily-use typography
+   ========================================================= */
+
+html {
+    font-size: 15px !important;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+    letter-spacing: 0 !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+/* ---------- Page titles ---------- */
+
+.page-title h1,
+.page-header h1,
+.detail-header h1 {
+    font-size: 30px !important;
+    line-height: 1.25 !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px !important;
+}
+
+.page-title p,
+.page-header p,
+.detail-header p {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+}
+
+/* ---------- Section titles ---------- */
+
+.section-heading h2,
+.section-header h2,
+.section-title,
+.info-card h2,
+.section-card h2,
+.chart-header h3 {
+    font-size: 21px !important;
+    line-height: 1.35 !important;
+    font-weight: 700 !important;
+}
+
+/* ---------- Card titles ---------- */
+
+.card h2,
+.card h3,
+.metric-card h2,
+.metric-card h3,
+.info-card h3,
+.section-card h3 {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    font-weight: 650 !important;
+}
+
+/* ---------- ALL NORMAL TEXT ---------- */
+
+p,
+span,
+div {
+    line-height: 1.5;
+}
+
+/* ---------- Forms ---------- */
+
+label,
+.form-label,
+.field-label,
+.input-label {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+}
+
+input,
+select,
+textarea {
+    font-family: inherit !important;
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+    min-height: 40px !important;
+}
+
+/* ---------- Policy controls ---------- */
+
+/* Policy card text */
+.policy-control,
+.policy-card,
+.control-group,
+.policy-section,
+.policy-grid {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+/* Policy labels */
+.policy-control label,
+.policy-card label,
+.control-group label,
+.policy-section label,
+.policy-grid label {
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+    font-weight: 600 !important;
+}
+
+/* Text next to sliders */
+.policy-control,
+.policy-card,
+.control-group {
+    padding: 18px !important;
+}
+
+/* Slider labels / values */
+.policy-control span,
+.policy-card span,
+.control-group span {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+/* Range controls */
+input[type="range"] {
+    min-height: auto !important;
+    height: 6px !important;
+    margin-top: 12px !important;
+    margin-bottom: 8px !important;
+}
+
+/* ---------- Buttons ---------- */
+
+button,
+.btn,
+.button {
+    font-family: inherit !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    min-height: 40px !important;
+    padding: 9px 16px !important;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+    font-size: 14px !important;
+}
+
+th {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    padding: 13px 14px !important;
+}
+
+td {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    padding: 13px 14px !important;
+}
+
+/* ---------- Important numbers ---------- */
+
+.stat-value,
+.metric-value,
+.risk-value {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
+}
+
+/* ---------- Supporting text ---------- */
+
+.stat-label,
+.metric-label,
+.risk-label {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+}
+
+.stat-description,
+.metric-sub,
+.info-box .label {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+/* ---------- Badges ---------- */
+
+.badge,
+.status,
+.security-badge,
+.rag-label {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    padding: 5px 9px !important;
+}
+
+/* ---------- Risk explanation ---------- */
+
+.rag-summary,
+.rag-grounding,
+.shap-summary {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+}
+
+/* ---------- Factor lists ---------- */
+
+.risk-factor,
+.safe-factor,
+.factor-item {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    padding: 11px 13px !important;
+    margin-bottom: 8px !important;
+}
+
+/* ---------- Navigation ---------- */
+
+nav a {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+}
+
+/* ---------- Footer ---------- */
+
+.footer,
+.footer-bottom {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* ---------- General spacing ---------- */
+
+.card,
+.metric-card,
+.info-card,
+.section-card {
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.grid,
+.cards-grid,
+.metrics-grid,
+.stats-grid,
+.section-grid {
+    gap: 18px !important;
+}
+
+/* ---------- Better form spacing ---------- */
+
+.form-group,
+.form-field {
+    margin-bottom: 17px !important;
+}
+
+label,
+.form-label {
+    margin-bottom: 7px !important;
+}
+
+/* ---------- Policy description ---------- */
+
+.policy-control p,
+.policy-card p,
+.control-group p,
+.policy-section p {
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+}
+
+/* ---------- Small text ---------- */
+
+small {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 768px) {
+
+    body {
+        font-size: 14px !important;
+    }
+
+    .page-title h1,
+    .page-header h1,
+    .detail-header h1 {
+        font-size: 26px !important;
+    }
+
+    .card,
+    .metric-card,
+    .info-card,
+    .section-card {
+        padding: 16px !important;
+    }
+
+    th,
+    td {
+        padding: 10px !important;
+    }
+}
+
+</style>
+
+<style id="riskguard-clean-navbar">
+/* RiskGuard AI — simple, clean navbar */
+.riskguard-navbar {
+    width: 100%;
+    height: 88px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.riskguard-navbar-inner {
+    width: min(1200px, 92%);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.riskguard-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+.riskguard-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.riskguard-brand-text {
+    color: #111827;
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+.riskguard-brand-text span {
+    color: #2563eb;
+}
+
+.riskguard-nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.riskguard-nav-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 18px;
+    border-radius: 24px;
+    color: #111827;
+    background: transparent;
+    text-decoration: none !important;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background .2s ease, color .2s ease;
+}
+
+.riskguard-nav-links a:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.riskguard-nav-links a.active {
+    background: #f1f1f1;
+    color: #111827;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .riskguard-navbar {
+        height: 78px;
+    }
+
+    .riskguard-navbar-inner {
+        width: calc(100% - 28px);
+        gap: 12px;
+    }
+
+    .riskguard-brand-text {
+        font-size: 17px;
+    }
+
+    .riskguard-logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .riskguard-nav-links a {
+        height: 42px;
+        padding: 0 10px;
+        font-size: 15px;
+    }
+}
+</style>
+
+<style id="riskguard-full-width">
+/* Full-width layout */
+html,
+body {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.container,
+.page,
+main {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Comfortable screen-edge spacing */
+.container {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+}
+
+/* Keep navbar full width */
+.riskguard-navbar,
+header {
+    width: 100% !important;
+}
+
+/* Prevent horizontal overflow */
+body {
+    overflow-x: hidden !important;
+}
+</style>
+<style id="riskguard-navbar-full-width">
+/* Full-width navbar matching full-width page */
+
+.riskguard-navbar {
+    width: 100% !important;
+    height: 88px !important;
+    padding: 0 32px !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    box-sizing: border-box !important;
+}
+
+.riskguard-navbar-inner {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 32px !important;
+}
+
+/* Brand */
+.riskguard-brand {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+}
+
+.riskguard-logo {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 11px !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+}
+
+.riskguard-brand-text {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+}
+
+/* Navigation */
+.riskguard-nav-links {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+}
+
+.riskguard-nav-links a {
+    height: 48px !important;
+    padding: 0 18px !important;
+    border-radius: 24px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+
+    color: #111827 !important;
+    background: transparent !important;
+    text-decoration: none !important;
+}
+
+.riskguard-nav-links a:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+.riskguard-nav-links a.active {
+    background: #f1f1f1 !important;
+    color: #111827 !important;
+    font-weight: 600 !important;
+}
+
+@media (max-width: 900px) {
+    .riskguard-navbar {
+        padding: 0 18px !important;
+    }
+
+    .riskguard-brand-text {
+        font-size: 18px !important;
+    }
+
+    .riskguard-nav-links a {
+        font-size: 16px !important;
+        padding: 0 10px !important;
+    }
+}
+</style>
+<style id="riskguard-cold-start">
+.customer-history-card {
+    margin-top: 20px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.customer-history-card h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: #0f172a;
+}
+
+.customer-history-subtitle {
+    margin: 0 0 18px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.history-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.history-status.returning {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.history-status.cold {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.history-status.unavailable {
+    color: #475569;
+    background: #f1f5f9;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.history-item {
+    padding: 15px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.history-label {
+    display: block;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.history-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+@media (max-width: 700px) {
+    .history-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+<style id="riskguard-step5-history">
+.customer-history-card {
+    margin: 20px 0;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(15,23,42,.05);
+}
+
+.customer-history-card h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: #0f172a;
+}
+
+.customer-history-subtitle {
+    margin: 0 0 16px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.history-status {
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.history-status.returning {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.history-status.cold {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.history-status.unavailable {
+    color: #475569;
+    background: #f1f5f9;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.history-item {
+    padding: 15px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.history-label {
+    display: block;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.history-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+@media (max-width: 700px) {
+    .history-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<style id="riskguard-unified-layout">
+
+/* =========================================================
+   RiskGuard AI — Unified Application Layout
+   Applied as a final visual layer only; functionality preserved.
+   ========================================================= */
+:root{
+    --rg-primary:#2563eb;
+    --rg-primary-hover:#1d4ed8;
+    --rg-bg:#f8fafc;
+    --rg-surface:#ffffff;
+    --rg-border:#e5e7eb;
+    --rg-text:#111827;
+    --rg-muted:#6b7280;
+    --rg-shadow:0 10px 30px rgba(15,23,42,.06);
+}
+html{
+    font-size:15px;
+    -webkit-text-size-adjust:100%;
+}
+body{
+    background:var(--rg-bg) !important;
+    color:var(--rg-text);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Shared application header ---------- */
+.riskguard-navbar,
+header{
+    width:100%;
+    min-height:76px;
+    height:76px;
+    background:rgba(255,255,255,.96) !important;
+    border-bottom:1px solid var(--rg-border) !important;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    backdrop-filter:blur(12px);
+}
+.riskguard-navbar-inner,
+header > .container.navbar{
+    width:min(1200px,92%);
+    max-width:1200px;
+    height:76px;
+    min-height:76px;
+    margin:0 auto;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+}
+.riskguard-brand,
+header .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    flex-shrink:0;
+}
+.riskguard-logo,
+header .logo-icon{
+    width:42px !important;
+    height:42px !important;
+    min-width:42px;
+    border-radius:12px !important;
+    background:#2563eb !important;
+    color:#fff !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px !important;
+    font-weight:800 !important;
+}
+.riskguard-brand-text,
+header .logo h2{
+    font-size:21px !important;
+    line-height:1.2;
+    font-weight:700 !important;
+    color:#111827;
+    white-space:nowrap;
+}
+.riskguard-brand-text span,
+header .logo span{
+    color:#2563eb !important;
+}
+.riskguard-nav-links,
+header nav{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:28px !important;
+    margin:0;
+}
+.riskguard-nav-links a,
+header nav a{
+    text-decoration:none;
+    color:#6b7280 !important;
+    font-size:14px !important;
+    line-height:1.2;
+    font-weight:500 !important;
+    padding:9px 0 !important;
+    border-radius:9px;
+    white-space:nowrap;
+    transition:color .15s ease,background .15s ease;
+}
+.riskguard-nav-links a:hover,
+.riskguard-nav-links a.active,
+header nav a:hover,
+header nav a.active{
+    color:#2563eb !important;
+}
+.riskguard-nav-links a.active,
+header nav a.active{
+    font-weight:700 !important;
+}
+
+/* ---------- Shared page width ---------- */
+main.container,
+main > .container,
+.page{
+    width:min(1200px,92%) !important;
+    max-width:1200px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+}
+
+/* ---------- Shared cards ---------- */
+.card,
+.stat-card,
+.risk-card,
+.chart-card,
+.transactions-card,
+.table-card,
+.hero,
+.toolbar,
+.header-card,
+.notice{
+    box-shadow:var(--rg-shadow);
+}
+
+/* ---------- Shared headings ---------- */
+h1{font-weight:700;}
+h2,h3{font-weight:700;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        width:calc(100% - 32px);
+    }
+    .riskguard-nav-links,
+    header nav{
+        gap:16px !important;
+    }
+}
+@media (max-width:720px){
+    .riskguard-navbar,
+    header,
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        min-height:72px;
+        height:auto;
+    }
+    .riskguard-navbar-inner,
+    header > .container.navbar{
+        min-height:72px;
+        height:auto;
+        padding:12px 0;
+        flex-wrap:wrap;
+    }
+    .riskguard-nav-links,
+    header nav{
+        width:100%;
+        justify-content:flex-start;
+        overflow-x:auto;
+        padding-bottom:2px;
+        gap:18px !important;
+        scrollbar-width:none;
+    }
+    .riskguard-nav-links::-webkit-scrollbar,
+    header nav::-webkit-scrollbar{display:none;}
+}
+
+
+/* Transaction Details — same application canvas */
+main{padding:38px 0 70px !important;}
+.container{width:min(1200px,92%) !important;max-width:1200px !important;}
+.detail-grid{gap:20px !important;}
+.section-card{padding:24px !important;border-radius:16px !important;}
+.score-grid{gap:16px !important;}
+@media(max-width:600px){.container{width:calc(100% - 32px) !important;}}
+
+</style>
+<style>
+/* =========================================================
+   RISKGUARD - GLOBAL PAGE WIDTH & LAYOUT
+   Visual/layout only - does not change application logic
+   ========================================================= */
+
+:root {
+    --rg-page-width: 1200px;
+}
+
+/* Main page containers */
+main,
+.main,
+.main-content,
+.content,
+.container,
+.page-container,
+.dashboard-container,
+.app-container {
+    width: 100%;
+    max-width: var(--rg-page-width);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Prevent oversized sections */
+section,
+.card,
+.panel,
+.table-container,
+.chart-container {
+    box-sizing: border-box;
+}
+
+/* Consistent page horizontal spacing */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Tables stay inside the page */
+table {
+    max-width: 100%;
+}
+
+/* Images/charts never overflow */
+img,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+/* Large screens */
+@media (min-width: 1250px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        max-width: 1200px;
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1249px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+</style>
+<style id="riskguard-common-layout">
+/* =========================================================
+   RISKGUARD - SAME WIDTH AS HOME / CREATE ORDER
+   VISUAL ONLY - NO LOGIC CHANGES
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Main application content */
+main,
+main.container,
+.main,
+.main-content,
+.content,
+.content-wrapper,
+.page-content,
+.page-container,
+.dashboard,
+.dashboard-container,
+.orders-container,
+.order-container,
+.performance-container,
+.model-performance-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Keep the actual page content aligned */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Prevent cards/tables from becoming wider than the page */
+.card,
+.cards,
+.panel,
+.section,
+.table-container,
+.chart-container,
+.metrics-container,
+.stats-container {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tables */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Charts */
+canvas,
+svg,
+img {
+    max-width: 100%;
+}
+
+/* Desktop */
+@media (min-width: 1250px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        max-width: 1200px;
+    }
+}
+
+/* Laptop / medium screen */
+@media (max-width: 1249px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+}
+</style>
+
+<style id="riskguard-transaction-final-theme">
+/* =========================================================
+   RiskGuard AI — Transaction Details
+   Match Index/Home theme exactly
+   VISUAL ONLY — functionality preserved
+   ========================================================= */
+
+:root{
+    --rg-sage:#8B9A6E;
+    --rg-sage-dark:#68764F;
+    --rg-sage-light:#EEF2E6;
+    --rg-cream:#F7F2EB;
+    --rg-beige:#EAE2D6;
+    --rg-grey:#EEEEEE;
+    --rg-text:#172033;
+    --rg-muted:#596273;
+    --rg-white:#FFFFFF;
+    --rg-border:#DDD8CE;
+}
+
+html,
+body{
+    margin:0 !important;
+    width:100% !important;
+    min-width:320px;
+    background:#FCFBF8 !important;
+    color:var(--rg-text) !important;
+    font-family:Inter,"Segoe UI",Arial,sans-serif !important;
+}
+
+/* ---------- NAVBAR ---------- */
+
+.riskguard-navbar{
+    width:100% !important;
+    height:72px !important;
+    min-height:72px !important;
+    padding:0 5% !important;
+    background:rgba(255,255,255,.94) !important;
+    border-bottom:1px solid #ECE9E2 !important;
+    box-sizing:border-box !important;
+    position:sticky !important;
+    top:0 !important;
+    z-index:1000 !important;
+    backdrop-filter:blur(12px);
+}
+
+.riskguard-navbar-inner{
+    width:100% !important;
+    max-width:none !important;
+    height:72px !important;
+    min-height:72px !important;
+    margin:0 !important;
+    padding:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:28px !important;
+}
+
+/* Brand */
+
+.riskguard-brand{
+    display:flex !important;
+    align-items:center !important;
+    gap:12px !important;
+    text-decoration:none !important;
+    flex-shrink:0 !important;
+}
+
+.riskguard-logo{
+    width:42px !important;
+    height:42px !important;
+    min-width:42px !important;
+    border-radius:12px !important;
+    background:var(--rg-sage) !important;
+    color:#fff !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+    box-shadow:0 5px 14px rgba(139,154,110,.25) !important;
+}
+
+.riskguard-brand-text{
+    color:var(--rg-text) !important;
+    font-size:20px !important;
+    line-height:1.1 !important;
+    font-weight:700 !important;
+    letter-spacing:-.4px !important;
+}
+
+.riskguard-brand-text span{
+    color:var(--rg-sage) !important;
+}
+
+/* Navigation */
+
+.riskguard-nav-links{
+    display:flex !important;
+    align-items:center !important;
+    gap:28px !important;
+    margin:0 !important;
+    white-space:nowrap !important;
+}
+
+.riskguard-nav-links a{
+    color:#343a40 !important;
+    background:transparent !important;
+    font-size:14px !important;
+    font-weight:500 !important;
+    line-height:1.2 !important;
+    padding:25px 0 !important;
+    border:0 !important;
+    border-bottom:2px solid transparent !important;
+    border-radius:0 !important;
+    text-decoration:none !important;
+    transition:color .15s ease,border-color .15s ease !important;
+}
+
+.riskguard-nav-links a:hover{
+    color:var(--rg-sage-dark) !important;
+    background:transparent !important;
+    border-bottom-color:var(--rg-sage) !important;
+}
+
+.riskguard-nav-links a.active{
+    color:var(--rg-sage-dark) !important;
+    background:transparent !important;
+    border-bottom:2px solid var(--rg-sage) !important;
+    font-weight:600 !important;
+}
+
+/* ---------- PAGE WIDTH ---------- */
+
+main{
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:40px 0 70px !important;
+    box-sizing:border-box !important;
+}
+
+main > .container,
+#app{
+    width:min(1240px,100%) !important;
+    max-width:1240px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    box-sizing:border-box !important;
+}
+
+#app{
+    padding-left:28px !important;
+    padding-right:28px !important;
+}
+
+/* ---------- PAGE HEADERS ---------- */
+
+.detail-header{
+    margin-bottom:24px !important;
+}
+
+.detail-header h1{
+    color:var(--rg-text) !important;
+    font-size:30px !important;
+    line-height:1.25 !important;
+    font-weight:700 !important;
+}
+
+.detail-header p{
+    color:var(--rg-muted) !important;
+    font-size:15px !important;
+    line-height:1.55 !important;
+}
+
+/* ---------- CARDS ---------- */
+
+.card,
+.section-card,
+.customer-history-card,
+.rag-card{
+    background:var(--rg-white) !important;
+    border:1px solid var(--rg-border) !important;
+    box-shadow:0 10px 30px rgba(82,77,66,.07) !important;
+    border-radius:16px !important;
+}
+
+.section-card{
+    padding:24px !important;
+}
+
+.customer-history-card{
+    padding:22px !important;
+    margin:20px 0 !important;
+}
+
+.customer-history-card h3,
+.section-card h2,
+.rag-section-title{
+    color:var(--rg-text) !important;
+}
+
+/* ---------- INFORMATION BOXES ---------- */
+
+.info{
+    background:var(--rg-grey) !important;
+    border:1px solid #E5E1D9 !important;
+    border-radius:12px !important;
+}
+
+.info small,
+.score small,
+.history-label{
+    color:var(--rg-muted) !important;
+}
+
+.info strong,
+.history-value{
+    color:var(--rg-text) !important;
+}
+
+/* ---------- SCORE CARDS ---------- */
+
+.score{
+    background:#fff !important;
+    border:1px solid var(--rg-border) !important;
+    border-radius:14px !important;
+}
+
+.score strong{
+    color:var(--rg-text) !important;
+}
+
+.score p{
+    color:var(--rg-muted) !important;
+}
+
+/* ---------- BADGES ---------- */
+
+.badge.low,
+.badge.allow,
+.history-status.returning{
+    background:var(--rg-sage-light) !important;
+    color:#596A3F !important;
+}
+
+.badge.medium,
+.badge.manual_review,
+.history-status.cold{
+    background:#F5EBDD !important;
+    color:#80643A !important;
+}
+
+.badge.high,
+.badge.critical{
+    background:#F4E5E2 !important;
+    color:#96534A !important;
+}
+
+.badge.unavailable,
+.history-status.unavailable{
+    background:var(--rg-grey) !important;
+    color:var(--rg-muted) !important;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.btn-primary{
+    background:var(--rg-sage) !important;
+    color:#fff !important;
+    border:1px solid var(--rg-sage) !important;
+}
+
+.btn-primary:hover{
+    background:var(--rg-sage-dark) !important;
+    border-color:var(--rg-sage-dark) !important;
+}
+
+.btn-secondary{
+    background:var(--rg-beige) !important;
+    color:var(--rg-sage-dark) !important;
+    border:1px solid var(--rg-border) !important;
+}
+
+.btn-secondary:hover{
+    background:var(--rg-sage-light) !important;
+}
+
+/* ---------- SHAP / EXPLANATION ---------- */
+
+.rag-card{
+    background:#fff !important;
+}
+
+.rag-label{
+    color:var(--rg-sage-dark) !important;
+}
+
+.rag-summary,
+.shap-summary{
+    color:var(--rg-muted) !important;
+}
+
+.rag-grounding{
+    background:var(--rg-grey) !important;
+    color:var(--rg-muted) !important;
+}
+
+.factor{
+    background:#fff !important;
+    border:1px solid var(--rg-border) !important;
+    border-radius:12px !important;
+}
+
+.factor .name{
+    color:var(--rg-text) !important;
+}
+
+.factor .value{
+    color:var(--rg-muted) !important;
+}
+
+.risk-up{
+    color:#96534A !important;
+}
+
+.risk-down{
+    color:#596A3F !important;
+}
+
+.notice{
+    background:var(--rg-sage-light) !important;
+    color:var(--rg-sage-dark) !important;
+    border:1px solid #D7DFC9 !important;
+}
+
+.error{
+    background:#F4E5E2 !important;
+    color:#96534A !important;
+}
+
+/* ---------- HISTORY ---------- */
+
+.history-item{
+    background:var(--rg-grey) !important;
+    border:1px solid #E5E1D9 !important;
+}
+
+.customer-history-subtitle{
+    color:var(--rg-muted) !important;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media(max-width:980px){
+    .riskguard-navbar{
+        padding:0 18px !important;
+    }
+
+    .riskguard-nav-links{
+        gap:16px !important;
+        overflow-x:auto !important;
+    }
+
+    .riskguard-nav-links a{
+        padding:25px 0 !important;
+    }
+
+    main > .container,
+    #app{
+        width:100% !important;
+        max-width:none !important;
+    }
+
+    #app{
+        padding-left:20px !important;
+        padding-right:20px !important;
+    }
+}
+
+@media(max-width:720px){
+    .riskguard-navbar{
+        height:auto !important;
+        min-height:72px !important;
+    }
+
+    .riskguard-navbar-inner{
+        height:auto !important;
+        min-height:72px !important;
+        padding:10px 0 !important;
+        flex-wrap:wrap !important;
+    }
+
+    .riskguard-nav-links{
+        width:100% !important;
+        justify-content:flex-start !important;
+        overflow-x:auto !important;
+        gap:18px !important;
+        scrollbar-width:none !important;
+    }
+
+    .riskguard-nav-links::-webkit-scrollbar{
+        display:none !important;
+    }
+
+    .riskguard-nav-links a{
+        padding:9px 0 !important;
+    }
+
+    main{
+        padding-top:28px !important;
+    }
+
+    #app{
+        padding-left:16px !important;
+        padding-right:16px !important;
+    }
+
+    .detail-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .full{
+        grid-column:auto !important;
+    }
+
+    .score-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+}
+
+@media(max-width:600px){
+    .score-grid,
+    .info-grid{
+        grid-template-columns:1fr !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="riskguard-navbar">
+    <div class="riskguard-navbar-inner">
+
+        <a href="/" class="riskguard-brand">
+            <div class="riskguard-logo">RG</div>
+            <div class="riskguard-brand-text">RiskGuard <span>AI</span></div>
+        </a>
+
+        <nav class="riskguard-nav-links">
+            <a href="/" class="">Home</a>
+            <a href="/payment">Payment</a>
+            <a href="/dashboard" class="">Dashboard</a>
+            <a href="/create-order-page">Create Order</a>
+            <a href="/transactions" class="active">Transactions</a>
+            <a href="/model-performance" class="">Model Performance</a>
+        </nav>
+
+    </div>
+</header>
+<main><div class="container" id="app"><div class="loading">Loading transactions...</div></div></main>
+<script>
+const esc=v=>String(v??"--").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const money=v=>`INR ${Number(v||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`;
+const pct=v=>v===null||v===undefined||Number.isNaN(Number(v))?'--':`${(Number(v)*100).toFixed(2)}%`;
+const date=v=>{if(!v)return'--';try{return new Date(v).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});}catch{return v}};
+const riskClass=v=>String(v||'unavailable').toLowerCase().replace(/\s+/g,'-');
+const decisionClass=v=>String(v||'manual_review').toLowerCase();
+let allTransactions=[];
+
+async function api(url){
+    const r=await fetch(url);
+    if(!r.ok) throw new Error(`Request failed (${r.status})`);
+    return r.json();
+}
+
+function renderList(){
+    document.getElementById('app').innerHTML=`
+    <div class="hero">
+        <div>
+            <h1>Transaction Investigation</h1>
+            <p>Review every transaction and open a complete AI risk analysis for any payment.</p>
+        </div>
+        <button class="btn btn-primary" onclick="loadList()">Refresh</button>
+    </div>
+
+    <div class="card list-card">
+        <div class="list-head">
+            <h2>All Transactions</h2>
+            <input id="search" class="search"
+                   placeholder="Search ID, payment, email, contact...">
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Payment</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Risk</th>
+                        <th>Score</th>
+                        <th>Decision</th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+    </div>`;
+
+    document.getElementById('search')
+        .addEventListener('input',filterList);
+
+    filterList();
+}
+
+function filterList(){
+    const q=(document.getElementById('search')?.value||'').toLowerCase();
+
+    const list=allTransactions.filter(t =>
+        (`${t.id} ${t.payment_id||''} ${t.email||''} ${t.contact||''}`)
+        .toLowerCase()
+        .includes(q)
+    );
+
+    const rows=document.getElementById('rows');
+
+    if(!list.length){
+        rows.innerHTML='<tr><td colspan="8" class="empty">No transactions found.</td></tr>';
+        return;
+    }
+
+    rows.innerHTML=list.map(t=>`
+        <tr onclick="openDetail(${Number(t.id)})">
+            <td><span class="id">#${esc(t.id)}</span></td>
+            <td>${esc(t.payment_id)}</td>
+            <td>${esc(t.email||t.contact)}</td>
+            <td class="amount">${money(t.amount)}</td>
+            <td>${esc(t.method||'--').toUpperCase()}</td>
+            <td>
+                <span class="badge ${riskClass(t.risk_band)}">
+                    ${esc(t.risk_band||'UNAVAILABLE')}
+                </span>
+            </td>
+            <td><strong>${esc(pct(t.risk_score))}</strong></td>
+            <td>
+                <span class="badge ${decisionClass(t.action)}">
+                    ${esc(t.action||'MANUAL_REVIEW')}
+                </span>
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function loadList(){
+    try{
+        const response=await api('/api/transactions?limit=500');
+
+        // API returns {transactions: [...], count: ..., limit: ...}
+        allTransactions=Array.isArray(response.transactions)
+            ? response.transactions
+            : [];
+
+        renderList();
+
+    }catch(e){
+        document.getElementById('app').innerHTML=
+            `<div class="error">
+                Unable to load transactions. ${esc(e.message)}
+            </div>`;
+    }
+}
+
+function openDetail(id){window.location.href=`/transaction-details?id=${encodeURIComponent(id)}`}
+
+async function loadDetail(id){
+ try{
+  const t=await api(`/api/transactions/${encodeURIComponent(id)}`);
+  renderDetail(t);
+ }catch(e){document.getElementById('app').innerHTML=`<div class="error">Unable to load transaction #${esc(id)}. ${esc(e.message)}</div>`}
+}
+
+function factorHtml(f){
+ if(!f)return'';
+ const positive=Number(f.shap_value)>0;
+ return `<div class="factor">
+   <div>
+     <div class="name">${esc(f.title||f.feature||'Feature')}</div>
+     <div class="value">${esc(f.explanation||('Value: '+f.value))}</div>
+   </div>
+   <div class="impact ${positive?'Increased risk':'Reduced risk'}">
+     ${positive?'Increased risk':'Reduced risk'}<br>
+     ${Number(f.shap_value).toFixed(5)}
+   </div>
+ </div>`;
+}
+
+function renderShap(t){
+ const explanations=Array.isArray(t.shap_explanations)?t.shap_explanations:[];
+ const rag=t.rag_explanation||null;
+
+ if(!explanations.length&&!rag){
+   return '<div class="notice">Risk explanation is not available for this transaction. The transaction may have been processed before explainability data was generated.</div>';
+ }
+
+ let ragHtml='';
+
+ if(rag){
+   const riskFactors=Array.isArray(rag.risk_factors)?rag.risk_factors:[];
+   const safeFactors=Array.isArray(rag.safe_factors)?rag.safe_factors:[];
+
+   ragHtml=`
+   <div class="rag-card">
+     <div class="rag-label">AI Risk Explanation</div>
+     <div class="rag-summary">${esc(rag.summary||'Explanation generated from transaction risk evidence.')}</div>
+
+     ${riskFactors.length?`
+     <h3 class="rag-section-title">What increased risk</h3>
+     <div>${riskFactors.map(factorHtml).join('')}</div>`:''}
+
+     ${safeFactors.length?`
+     <h3 class="rag-section-title">What reduced risk</h3>
+     <div>${safeFactors.map(factorHtml).join('')}</div>`:''}
+
+     <div class="rag-grounding">
+       <strong>Grounded explanation</strong><br>
+       ${esc(rag.grounding||'Explanation is grounded in the transaction SHAP evidence.')}
+     </div>
+   </div>`;
+ }
+
+ return `
+   ${ragHtml}
+
+   <div class="shap-actions">
+     <div class="shap-summary">
+       Technical SHAP details show the individual model feature contributions.
+     </div>
+     <button class="btn btn-secondary" onclick="toggleShap()">
+       Show Technical SHAP Details
+     </button>
+   </div>
+
+   <div id="shapContent" class="shap-content">
+     <h3 style="margin:20px 0 8px;font-size:15px">All SHAP Contributions</h3>
+     ${explanations.length
+       ? explanations.map(factorHtml).join('')
+       : '<div class="muted">No SHAP contributions available.</div>'}
+   </div>`;
+}
+
+function toggleShap(){
+ const el=document.getElementById('shapContent');
+ const b=document.querySelector('.shap-actions button');
+ if(!el)return;
+ el.classList.toggle('show');
+ b.textContent=el.classList.contains('show')
+   ?'Hide Technical SHAP Details'
+   :'Show Technical SHAP Details';
+}
+function renderDetail(t){
+ const risk=t.risk_band||'UNAVAILABLE';const decision=t.action||'MANUAL_REVIEW';const fraud=t.fraud_prediction===true?'FRAUD':t.fraud_prediction===false?'LEGITIMATE':'NOT AVAILABLE';
+ document.getElementById('app').innerHTML=`
+ <div class="detail-header"><div><h1>Transaction #${esc(t.id)}</h1><p>Complete transaction-level AI risk investigation</p><div class="statuses"><span class="badge ${riskClass(risk)}">${esc(risk)}</span><span class="badge ${decisionClass(decision)}">${esc(decision)}</span><span class="badge ${fraud==='FRAUD'?'critical':fraud==='LEGITIMATE'?'low':'unavailable'}">${fraud}</span></div></div><div class="actions"><button class="btn btn-secondary" onclick="window.location.href='/transaction-details'">Back to Transactions</button></div></div>
+ <div class="customer-history-card" id="customerHistoryCard">
+    <h3>Customer History</h3>
+    <p class="customer-history-subtitle">
+        Customer history used by the risk assessment pipeline.
+    </p>
+
+    <div class="history-status unavailable" id="historyStatus">
+        Checking customer history...
+    </div>
+
+    <div class="history-grid">
+        <div class="history-item">
+            <span class="history-label">Customer Type</span>
+            <span class="history-value" id="customerType">—</span>
+        </div>
+
+        <div class="history-item">
+            <span class="history-label">Previous Transactions</span>
+            <span class="history-value" id="previousTransactionCount">—</span>
+        </div>
+
+        <div class="history-item">
+            <span class="history-label">History Available</span>
+            <span class="history-value" id="historyAvailable">—</span>
+        </div>
+    </div>
+</div>
+ <div class="detail-grid">
+ <div class="card section-card"><h2>Transaction Information</h2><div class="info-grid">${info('Transaction ID','#'+t.id)}${info('Payment ID',t.payment_id)}${info('Order ID',t.order_id)}${info('Amount',money(t.amount))}${info('Currency',t.currency)}${info('Status',t.status)}${info('Payment Method',(t.method||'--').toUpperCase())}${info('Captured',t.captured?'Yes':'No')}${info('Event Type',t.event_type)}${info('Transaction Time',date(t.created_at))}${info('Transaction DT',t.transaction_dt)}</div></div>
+ <div class="card section-card"><h2>Customer Information</h2><div class="info-grid">${info('Email',t.email)}${info('Contact',t.contact)}${info('Customer Key',t.customer_key)}${info('Payment ID',t.payment_id)}</div></div>
+ <div class="card section-card full"><h2>AI Risk Analysis</h2><div class="score-grid">${score('Model 2',pct(t.model2_score),'Fraud probability')}${score('Model 3',pct(t.model3_score),'Fraud probability')}${score('Combined Risk',pct(t.risk_score),'Fusion score')}${score('Decision',decision,'Final action')}</div></div>
+ <div class="card section-card full"><h2>SHAP Explainability</h2>${renderShap(t)}</div>
+ </div>`;
+ updateCustomerHistory(t);
+}
+function info(k,v){return `<div class="info"><small>${esc(k)}</small><strong>${esc(v)}</strong></div>`}
+function score(k,v,p){return `<div class="score"><small>${esc(k)}</small><strong>${esc(v)}</strong><p>${esc(p)}</p></div>`}
+
+const params=new URLSearchParams(location.search);const id=params.get('id');const merchantOrderId=params.get('order_id');
+async function loadMerchantOrder(orderId){
+ try{
+  const r=await fetch('/api/orders/'+encodeURIComponent(orderId));const o=await r.json();if(!r.ok)throw new Error(o.detail||'Unable to load order');
+  const sh=await fetch('/api/orders/'+encodeURIComponent(orderId)+'/shap');const shap=await sh.json();
+  const risk=String(o.return_priority||'LOW').toLowerCase();
+  document.getElementById('app').innerHTML=`<div class="detail-header"><div><h1>${esc(o.order_id)}</h1><p>Merchant order investigation and explainable return-risk assessment</p><div class="statuses"><span class="badge ${riskClass(o.return_priority)}">${esc(o.return_priority)}</span><span class="badge ${o.return_flagged?'high':'low'}">${o.return_flagged?'REVIEW REQUIRED':'NOT FLAGGED'}</span><span class="badge unavailable">${esc(o.payment_status||'PENDING')}</span></div></div><div class="actions"><button class="btn btn-secondary" onclick="window.location.href='/transactions'">Back to Orders</button></div></div>
+  <div class="detail-grid"><div class="card section-card"><h2>Order Information</h2><div class="info-grid">${info('Order ID',o.order_id)}${info('Customer',o.customer_name)}${info('Email',o.email)}${info('Contact',o.contact)}${info('Amount',money(o.total_amount))}${info('Category',o.category)}${info('Payment Method',o.payment_method)}${info('Payment Status',o.payment_status)}</div></div>
+  <div class="card section-card"><h2>Merchant Decision</h2><div class="score-grid">${score('Return Probability',Number(o.return_probability_percent).toFixed(2)+'%','AI return probability')}${score('Loss if Returned',money(o.loss_if_returned),'Dataset-derived loss proxy')}${score('Expected Return Loss',money(o.expected_return_loss),'Probability × exposure')}${score('Review Cutoff',money(o.expected_loss_cutoff),'Frozen validation cutoff')}</div><div style="margin-top:18px;padding:16px;border-radius:12px;background:#f8fafc;border:1px solid #e5e7eb">
+<div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#64748b;font-weight:700">
+AI MERCHANT RECOMMENDATION
+</div>
+<div style="margin-top:8px;font-size:20px;font-weight:800">
+${esc(actionLabel(o.merchant_action))}
+</div>
+<div style="margin-top:6px;color:#64748b;font-size:13px">
+Automatically generated from expected return loss and the validated operating cutoff.
+</div>
+</div></div>
+  <div class="card section-card full"><h2>Return Risk SHAP Explanation</h2>${renderReturnShap(shap)}</div></div>`;
+ }catch(e){document.getElementById('app').innerHTML='<div class="error">'+esc(e.message)+'</div>'}
+}
+function renderReturnShap(s){if(!s.shap_available)return '<div class="notice">SHAP explanation is unavailable for this order.'+(s.shap_reason?' '+esc(s.shap_reason):'')+'</div>';const f=(x,positive)=>`<div class="factor"><div><div class="name">${esc(x.feature)}</div><div class="value">Value: ${esc(x.value)}</div></div><div class="impact ${positive?'risk-up':'risk-down'}">${positive?'Increased risk':'Reduced risk'}<br>${Number(x.shap_value).toFixed(5)}</div></div>`;return `<p class="shap-summary">The explanation groups one-hot categorical effects back to the original order features.</p>${s.risk_factors?.length?'<h3>What increased return risk</h3>'+s.risk_factors.map(x=>f(x,true)).join(''):''}${s.safe_factors?.length?'<h3 style="margin-top:18px">What reduced return risk</h3>'+s.safe_factors.map(x=>f(x,false)).join(''):''}`}
+function actionLabel(v){return ({REVIEW_ORDER:'Review Order',MAKE_CONTACT:'Make Contact',SAFE:'Safe',PENDING:'Pending'})[v]||v||'Pending'}
+async function merchantAction(orderId,action){const r=await fetch('/api/orders/'+encodeURIComponent(orderId)+'/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action})});if(r.ok)loadMerchantOrder(orderId);}
+if(merchantOrderId)loadMerchantOrder(merchantOrderId);else if(id)loadDetail(id);else loadList();
+function updateCustomerHistory(t) {
+    const status = document.getElementById("historyStatus");
+    const type = document.getElementById("customerType");
+    const count = document.getElementById("previousTransactionCount");
+    const available = document.getElementById("historyAvailable");
+
+    if (!status) return;
+
+    if (t.cold_start === true) {
+        status.textContent = "New Customer / Cold Start";
+        status.className = "history-status cold";
+        type.textContent = "New Customer";
+        count.textContent = "0";
+        available.textContent = "No";
+        return;
+    }
+
+    if (t.cold_start === false) {
+        status.textContent = "Returning Customer";
+        status.className = "history-status returning";
+        type.textContent = "Returning Customer";
+        count.textContent = t.previous_transaction_count ?? "0";
+        available.textContent = t.history_available ? "Yes" : "No";
+        return;
+    }
+
+    status.textContent = "History Unavailable";
+    status.className = "history-status unavailable";
+    type.textContent = "Unavailable";
+    count.textContent = "—";
+    available.textContent = "Unavailable";
+}
+</script>
+<script id="riskguard-cold-start-js">
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

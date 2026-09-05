@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Return Risk | RiskGuard AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#2563eb;--bg:#f8fafc;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--shadow:0 10px 30px rgba(15,23,42,.06)}*{box-sizing:border-box;font-family:Inter,sans-serif}body{margin:0;background:var(--bg);color:var(--text)}.nav{height:88px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);font-weight:700;font-size:20px}.logo{width:42px;height:42px;border-radius:11px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:800}.brand span{color:var(--primary)}.links{display:flex;gap:6px}.links a{padding:14px 18px;border-radius:24px;text-decoration:none;color:var(--text);font-size:14px;font-weight:600}.links a:hover,.links a.active{background:#f1f1f1}.container{padding:42px 32px;max-width:1400px;margin:auto}.header{background:#fff;border:1px solid var(--border);border-radius:20px;padding:30px;margin-bottom:24px;box-shadow:var(--shadow)}h1{margin:0 0 8px;font-size:30px}.header p{margin:0;color:var(--muted);line-height:1.6}.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow)}h2{margin:0 0 5px;font-size:20px}.muted{color:var(--muted);font-size:14px}.form{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;font-weight:700;color:var(--muted)}input,select{width:100%;border:1px solid var(--border);border-radius:9px;padding:11px 12px;font-size:14px;background:#fff}.button{grid-column:1/-1;border:0;border-radius:10px;padding:12px;background:var(--primary);color:#fff;font-size:14px;font-weight:700;cursor:pointer}.result{min-height:300px;display:flex;align-items:center}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.metric{border:1px solid var(--border);border-radius:12px;padding:14px}.metric small{display:block;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase}.metric strong{display:block;font-size:22px;margin-top:5px}.decision{margin-top:18px;padding:14px;text-align:center;border-radius:12px;font-weight:800}.high{background:#fef2f2;color:#b91c1c}.medium{background:#fffbeb;color:#b45309}.low{background:#ecfdf5;color:#047857}.evidence{margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.evidence .card{padding:18px}.evidence strong{display:block;font-size:24px;margin-top:6px}.evidence small{color:var(--muted)}@media(max-width:1000px){.grid{grid-template-columns:1fr}.form{grid-template-columns:repeat(2,1fr)}.evidence{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.nav{height:auto;padding:15px;flex-wrap:wrap;gap:12px}.links{width:100%;overflow:auto}.container{padding:20px 15px}.form{grid-template-columns:1fr}.evidence{grid-template-columns:1fr}}
+</style>
+<style>
+/* =========================================================
+   RISKGUARD - GLOBAL PAGE WIDTH & LAYOUT
+   Visual/layout only - does not change application logic
+   ========================================================= */
+
+:root {
+    --rg-page-width: 1200px;
+}
+
+/* Main page containers */
+main,
+.main,
+.main-content,
+.content,
+.container,
+.page-container,
+.dashboard-container,
+.app-container {
+    width: 100%;
+    max-width: var(--rg-page-width);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Prevent oversized sections */
+section,
+.card,
+.panel,
+.table-container,
+.chart-container {
+    box-sizing: border-box;
+}
+
+/* Consistent page horizontal spacing */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Tables stay inside the page */
+table {
+    max-width: 100%;
+}
+
+/* Images/charts never overflow */
+img,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+/* Large screens */
+@media (min-width: 1250px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        max-width: 1200px;
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1249px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    .main,
+    .main-content,
+    .content,
+    .container,
+    .page-container,
+    .dashboard-container,
+    .app-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+</style>
+<style id="riskguard-common-layout">
+/* =========================================================
+   RISKGUARD - SAME WIDTH AS HOME / CREATE ORDER
+   VISUAL ONLY - NO LOGIC CHANGES
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Main application content */
+main,
+main.container,
+.main,
+.main-content,
+.content,
+.content-wrapper,
+.page-content,
+.page-container,
+.dashboard,
+.dashboard-container,
+.orders-container,
+.order-container,
+.performance-container,
+.model-performance-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Keep the actual page content aligned */
+main {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Prevent cards/tables from becoming wider than the page */
+.card,
+.cards,
+.panel,
+.section,
+.table-container,
+.chart-container,
+.metrics-container,
+.stats-container {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tables */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Charts */
+canvas,
+svg,
+img {
+    max-width: 100%;
+}
+
+/* Desktop */
+@media (min-width: 1250px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        max-width: 1200px;
+    }
+}
+
+/* Laptop / medium screen */
+@media (max-width: 1249px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        width: calc(100% - 40px);
+        max-width: 1200px;
+    }
+
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    main,
+    main.container,
+    .main,
+    .main-content,
+    .content,
+    .content-wrapper,
+    .page-content,
+    .page-container,
+    .dashboard,
+    .dashboard-container,
+    .orders-container,
+    .order-container,
+    .performance-container,
+    .model-performance-container {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+}
+</style>
+</head>
+<body>
+<header class="nav"><a class="brand" href="/"><div class="logo">RG</div><div>RiskGuard <span>AI</span></div></a><nav class="links"><a href="/">Home</a><a href="/payment">Payment</a><a href="/dashboard">Dashboard</a><a href="/create-order-page">Create Order</a><a href="/transactions">Transactions</a><a href="/model-performance">Model Performance</a></nav></header>
+<main class="container">
+<section class="header"><h1>Merchant Return Risk</h1><p>Score an order before fulfillment and prioritize merchant attention using expected return loss. The production operating point is frozen from validation.</p></section>
+<section class="grid"><div class="card"><h2>Order Assessment</h2><div class="muted">Enter order and customer-history features available at order time.</div>
+<form id="form" class="form">
+<div class="field"><label>Price</label><input name="price" type="number" step="0.01" value="1000" required></div><div class="field"><label>Discount</label><input name="discount" type="number" step="0.01" value="5"></div><div class="field"><label>Quantity</label><input name="quantity" type="number" min="1" value="2"></div><div class="field"><label>Total Amount</label><input name="total_amount" type="number" step="0.01" value="1900" required></div><div class="field"><label>Shipping Cost</label><input name="shipping_cost" type="number" step="0.01" value="15"></div><div class="field"><label>Profit Margin</label><input name="profit_margin" type="number" step="0.01" value="150"></div><div class="field"><label>Delivery Days</label><input name="delivery_time_days" type="number" min="0" value="5"></div><div class="field"><label>Customer Age</label><input name="customer_age" type="number" min="0" value="25"></div><div class="field"><label>Previous Orders</label><input name="previous_orders" type="number" min="0" value="4"></div><div class="field"><label>Previous Returns</label><input name="previous_returns" type="number" min="0" value="3"></div><div class="field"><label>Previous Return Rate</label><input name="previous_return_rate" type="number" min="0" max="1" step="0.01" value="0.75"></div><div class="field"><label>Previous Avg Order Value</label><input name="previous_avg_order_value" type="number" step="0.01" value="900"></div><div class="field"><label>Days Since Previous</label><input name="days_since_previous_order" type="number" min="0" step="0.01" value="12"></div><div class="field"><label>Category</label><select name="category"><option>Fashion</option><option>Electronics</option><option>Home</option><option>Toys</option><option>Sports</option><option>Beauty</option><option>Grocery</option></select></div><div class="field"><label>Payment Method</label><select name="payment_method"><option>PayPal</option><option>Debit Card</option><option>Credit Card</option><option>COD</option><option>Wallet</option><option>UPI</option></select></div><div class="field"><label>Region</label><select name="region"><option>East</option><option>South</option><option>West</option><option>Central</option><option>North</option></select></div><div class="field"><label>Customer Gender</label><select name="customer_gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+<button class="button" type="submit">Analyze Return Risk</button></form></div>
+<div class="card result" id="result"><div><div class="muted">MERCHANT DECISION</div><h2>Ready to analyze</h2><p class="muted">Submit an order to calculate return probability, expected return loss and priority.</p></div></div></section>
+<section class="evidence"><div class="card"><small>TEST REVIEW WORKLOAD</small><strong>10.14%</strong><small>Orders flagged</small></div><div class="card"><small>LOSS CAPTURE</small><strong>42.48%</strong><small>Realized loss proxy</small></div><div class="card"><small>RANDOM BASELINE</small><strong>â‚¹1,236.60</strong><small>Average 10% selection</small></div><div class="card"><small>MODEL LIFT</small><strong>4.24Ã—</strong><small>Vs random baseline</small></div></section>
+</main>
+<script>
+const form=document.getElementById('form'), result=document.getElementById('result');
+form.addEventListener('submit',async(e)=>{e.preventDefault();const data=Object.fromEntries(new FormData(form).entries());['price','discount','quantity','total_amount','shipping_cost','profit_margin','delivery_time_days','customer_age','previous_orders','previous_returns','previous_return_rate','previous_avg_order_value','days_since_previous_order'].forEach(k=>data[k]=Number(data[k]));result.innerHTML='<div><h2>Analyzing...</h2><p class="muted">Running the return-risk model.</p></div>';try{const r=await fetch('/api/return-risk/score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const p=await r.json();if(!r.ok||!p.success)throw new Error(p.detail||'Request failed');const x=p.result, c=String(x.priority||'LOW').toLowerCase();result.innerHTML=`<div style="width:100%"><div class="muted">MERCHANT DECISION</div><h2>Return Risk Assessment</h2><div class="metric-grid"><div class="metric"><small>Return Probability</small><strong>${Number(x.return_probability_percent).toFixed(2)}%</strong></div><div class="metric"><small>Loss if Returned</small><strong>â‚¹${Number(x.loss_if_returned).toLocaleString('en-IN',{minimumFractionDigits:2})}</strong></div><div class="metric"><small>Expected Return Loss</small><strong>â‚¹${Number(x.expected_return_loss).toLocaleString('en-IN',{minimumFractionDigits:2})}</strong></div><div class="metric"><small>Review Cutoff</small><strong>â‚¹${Number(x.expected_loss_cutoff).toLocaleString('en-IN',{minimumFractionDigits:2})}</strong></div></div><div class="decision ${c}">${x.flagged?'HIGH PRIORITY â€” REVIEW ORDER':c.toUpperCase()+' PRIORITY â€” NO REVIEW FLAG'}</div></div>`}catch(err){result.innerHTML='<div><h2>Unable to score order</h2><p class="muted">Check the server and try again.</p></div>';console.error(err)}});
+</script>
+</body>
+</html>
+
+
